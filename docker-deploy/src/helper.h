@@ -119,28 +119,5 @@ int acceptClients(int server_fd, const char * ip){
   return client_connection_fd;
 }
 
-// connect ringmaster to players, send info and receive port_num
-void RMtoPlayers(int ringmaster_server_fd,  int num_players, vector<P> players){
-  for (int i = 0; i < num_players; i++){
-    const char * ip;
-    int player_client1_fd = acceptClients(ringmaster_server_fd, ip);
-
-    // send info of id and num_players to each player
-    send(player_client1_fd, &i, sizeof(i), 0);
-    send(player_client1_fd, &num_players, sizeof(num_players), 0);
-
-    // receive port num from player
-    const char * player_server_port;
-    recv(player_client1_fd, &player_server_port, sizeof(player_server_port), 0);
-
-    // store info of each player
-    P player = P (ip, player_server_port);
-    players.push_back(player);
-
-    // print connection msg
-    cout << "Player " << i << " is ready to play" <<endl;
-  }
-}
-
 
 

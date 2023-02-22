@@ -12,7 +12,7 @@ void ProxyServer::run(){
         client client;
         client.socket_fd = accept_socket_fd;
         client.id = client_id;
-        client.ip = ip;
+        client.ip = ip; // maybe not used
 
         // thread
         client_id++;
@@ -22,8 +22,10 @@ void ProxyServer::run(){
 
 void * ProxyServer::transferData(client * client){
     char request_msg[65535];
-    int len = recv(client->socket_fd, request_msg, 65535, 0);
+    int len = recv(client->socket_fd, request_msg, sizeof(request_msg), 0);
     if (len <= 0) {
         return NULL;
     }
+    
+
 }
