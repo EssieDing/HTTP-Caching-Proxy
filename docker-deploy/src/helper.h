@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -15,7 +14,7 @@ int setUpServer(const char * myPort){
   struct addrinfo host_info;
   struct addrinfo *host_info_list;
   const char *hostname = NULL;
-  const char *port     =  myPort;
+  const char *port     = myPort;
 
   memset(&host_info, 0, sizeof(host_info));
 
@@ -25,7 +24,7 @@ int setUpServer(const char * myPort){
 
   status = getaddrinfo(hostname, port, &host_info, &host_info_list);
   if (status != 0) {
-    cerr << "Error: cannot get address info for host" << endl;
+    cerr << "Error: server: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
     return -1;
   } //if
@@ -35,7 +34,7 @@ int setUpServer(const char * myPort){
 		     host_info_list->ai_protocol);
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
-    cerr << "  (" << hostname << "," << port << ")" << endl;
+    cerr << "  (" << hostname<< "," << port << ")" << endl;
     return -1;
   } //if
 
@@ -67,7 +66,6 @@ int setUpClient(const char *hostname, const char *myPort){
   int socket_fd;
   struct addrinfo host_info;
   struct addrinfo *host_info_list;
-  const char *hostname = hostname;
   const char *port     = myPort;
 
   memset(&host_info, 0, sizeof(host_info));
@@ -76,8 +74,8 @@ int setUpClient(const char *hostname, const char *myPort){
 
   status = getaddrinfo(hostname, port, &host_info, &host_info_list);
   if (status != 0) {
-    cerr << "Error: cannot get address info for host" << endl;
-    cerr << "  (" << hostname << "," << port << ")" << endl;
+    cerr << "Error: client: cannot get address info for host" << endl;
+    cerr << "  (" << port <<  ","<< hostname << ")" << endl;
     return -1;
   } //if
 

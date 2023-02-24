@@ -11,18 +11,21 @@
 #include <string.h>
 
 class ProxyServer {
-    private:
+    //private:
     const char * port_num;
-    struct client_t{
-        int socket_fd;
-        int id;
-        const char * ip;
-    };
-    typedef struct client_t client;
 
     public:
-    explicit ProxyServer (const char * port_num): port_num(port_num) {};
+        class Client{
+            public:
+            int socket_fd; // socket created from proxy end as server to accept request from browser
+            int server_fd; // socket created from proxy end as client to connect to web server
+            int id;
+            const char * ip;
+            Client(int fd, int id, const char *ip): socket_fd(fd), server_fd(-1), id(id), ip(ip){};
+        };
+    ProxyServer (const char * port_num): port_num(port_num) {};
 
-    void run(){};
-    void * transferData(client * client){};
+    void run();
+    void * processRequest(void * client);
+    void * processCONNECT(Client * client);
 };

@@ -1,6 +1,6 @@
-#include "helper.h"
 #include "proxy.h"
 
 int main(){
-    Proxy proxy ("12345");
+    ProxyServer proxy ("12345");
+    proxy.run();
 }
