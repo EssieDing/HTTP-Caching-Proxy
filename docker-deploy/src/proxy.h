@@ -26,6 +26,6 @@ class ProxyServer {
     ProxyServer (const char * port_num): port_num(port_num) {};
 
     void run();
-    void * processRequest(void * client);
-    void * processCONNECT(Client * client);
+    static void * processRequest(void * client);
+    static void * processCONNECT(Client * client);
 };
