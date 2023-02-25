@@ -138,7 +138,7 @@ void ProxyServer::processGET(ProxyServer::Client & client, Request & request, co
     //ssize_t recv(int socket, void *buffer, size_t length, int flags);
 
     // send request: proxy->server
-    ssize_t num=send(client.server_fd,message,message_bytes, MSG_NOSIGNAL);
+    ssize_t num=send(client.server_fd,message,message_bytes, 0);
     if(num==-1){
         cout<<"send unsuccessfully.\n";//////
         return;
@@ -146,7 +146,7 @@ void ProxyServer::processGET(ProxyServer::Client & client, Request & request, co
 
     // recieve response: server->proxy
     char server_rsp[65536];
-    int server_rsp_bytes = recv(client.server_fd,server_rsp, sizeof(server_rsp),MSG_NOSIGNAL);
+    int server_rsp_bytes = recv(client.server_fd,server_rsp, sizeof(server_rsp),0);
     
     if(server_rsp_bytes==-1){
         cout<<"recv unsuccessfully.\n";//////
@@ -157,15 +157,28 @@ void ProxyServer::processGET(ProxyServer::Client & client, Request & request, co
     // prase the response, determine chunked or not
     string temp_response(server_rsp);
     string response=temp_response.substr(0,server_rsp_bytes);//////
-    bool chunked=determineChunked(response);
+    cout<<response<<endl;//////////////////////test
+    // bool chunked=determineChunked(response);
+    bool chunked=determineChunked(server_rsp);
 
-    if(chunked==true){
+    if(chunked){
         // for chunked
         cout<<"enter chunked:\n";
+
+        // test:
+        const char * test1=strstr(server_rsp,"chunked");
+        if(test1!=nullptr){cout<<"right1\n";}else{cout<<"wrong1\n";}
+        // // test:
+        // const char * test2=strstr(server_rsp,"Content-Length: ");
+        // if(test2==nullptr){cout<<"right2\n";}else{cout<<"wrong2\n";}
+        // test end
+
         getChunked(client,server_rsp,server_rsp_bytes);
         cout<<"Chunked finished.\n";     
     }else{
-        if(response.find_first_of("Content-Length: ")!=string::npos){
+
+        const char * test2=strstr(server_rsp,"Content-Length: ");
+        if(test2==nullptr){
             // no Transfer-Encoding && no Content-Length: error
             cout<<"error response in GET.";
             return;
@@ -177,18 +190,21 @@ void ProxyServer::processGET(ProxyServer::Client & client, Request & request, co
     }
 }
 
-bool ProxyServer::determineChunked(string rsp){
-    if(rsp.find_first_of("Transfer-Encoding: chunked")!=string::npos){
-        return true;
-    }
-    else{
-        return false;
-    }
+bool ProxyServer::determineChunked(char * rsp){// string rsp
+    // size_t ans;
+    // if((ans=rsp.find_first_of("chunked"))!=string::npos){
+    //     return true;
+    // }
+    // else{
+    //     return false;
+    // }
+    const char * test1=strstr(rsp,"chunked");
+    if(test1!=nullptr){return true;}else{return false;}
 }
 
 void ProxyServer::getChunked(Client & client, const char * server_rsp, int server_rsp_bytes){
     // send the first response recieved from server to client: proxy->client
-    int num = send(client.socket_fd,server_rsp,server_rsp_bytes, MSG_NOSIGNAL);
+    int num = send(client.socket_fd,server_rsp,server_rsp_bytes, 0);
     if (num == -1) {
         cout<<"send the response recieved from server to client unsuccessfully.\n";
         return;
@@ -197,7 +213,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     while (1) {
         cout<<"loop once\n";
         // recv from server
-        int recv_length=recv(client.server_fd,message, sizeof(message), MSG_NOSIGNAL);
+        int recv_length=recv(client.server_fd,message, sizeof(message), 0);
         if(recv_length==0){
             // no messages are available to be recieved
             return;
@@ -207,7 +223,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
             return;
         }
         // send to client
-        int send_length=send(client.socket_fd,message,recv_length, MSG_NOSIGNAL); 
+        int send_length=send(client.socket_fd,message,recv_length, 0); 
         if(send_length==-1){
             cout<<"chunked: send unsuccessfully.\n";
             return;
@@ -215,19 +231,22 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     }
 }
 
-void ProxyServer::getNoChunked(Client & client, const char * server_rsp, int server_rsp_bytes){
+void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes){
     string full_message(server_rsp, server_rsp_bytes);
     // get Content-Length: 
     // help to determine whether we have received the full message. 
     // < Content-Length: don't have the full message yet, wait in a while loop 
     // until you have received >= Content-Length
+
+    cout<<"enter getNonChunked:\n";
     int content_length=getContentLength(server_rsp,server_rsp_bytes);
+    cout<<"get remaining content length: "<<content_length<<endl;
 
     // get full message according to the remaining content_length 
     int current_recieved_length = 0;
     while (current_recieved_length < content_length) {
         char new_server_rsp[65536];
-        int rsp_len = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), MSG_NOSIGNAL);
+        int rsp_len = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), 0);
 
         if(rsp_len==-1){
             cout<<"Content Length: recv unsuccessfully.\n";
@@ -254,7 +273,7 @@ void ProxyServer::getNoChunked(Client & client, const char * server_rsp, int ser
 
     // send to client
     int rsp_to_client;
-    if ((rsp_to_client = send(client.socket_fd, msg_sent, full_message.size(),MSG_NOSIGNAL))==-1){
+    if ((rsp_to_client = send(client.socket_fd, msg_sent, full_message.size(),0))==-1){
         cout<<"Content Length: send unsuccessfully.\n";
         return;
     }
@@ -264,19 +283,23 @@ void ProxyServer::getNoChunked(Client & client, const char * server_rsp, int ser
 }
 
 
-int ProxyServer::getContentLength(const char * server_rsp,int server_rsp_bytes){
+int ProxyServer::getContentLength(char * server_rsp,int server_rsp_bytes){
     // get the pointer pointing to start of the "Content-Length"
-    const char * found_length=strstr(server_rsp,"Content-Length: ");
+    cout<<"enter get content length:\n";
+    char * found_length=strstr(server_rsp,"Content-Length: ");
     size_t size=strlen("Content-Length: ");
     found_length=found_length+size;
 
+    cout<<"run here 1\n";
     int content_length=0;
-    while(isdigit(*found_length)!=EOF){
+    while(isdigit(*found_length)){
+        // cout<<"run here 2\n";
         content_length *= 10;
         content_length += *found_length - '0';
         found_length++;
     }
     // remaining_content_length = content_length - (recv_size - header_size)
+    cout<<"run here 3\n";
     std::string rsp(server_rsp, server_rsp_bytes);
     size_t header_end=rsp.find_first_of("\r\n\r\n");
     content_length = content_length - (server_rsp_bytes - header_end - strlen("\r\n\r\n"));

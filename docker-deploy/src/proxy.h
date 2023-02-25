@@ -37,10 +37,10 @@ class ProxyServer {
     // GET method
     static void processGET(ProxyServer::Client & client, Request & request, const char * message, int message_bytes);
     static void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
-    static bool determineChunked(string rsp);
+    static bool determineChunked(char * rsp);//string
     
-    static void getNoChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Content-Length: <length>
-    static int getContentLength(const char * server_rsp, int server_rsp_bytes);
+    static void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes); // Content-Length: <length>
+    static int getContentLength(char * server_rsp, int server_rsp_bytes);
 
 
     // POST method
