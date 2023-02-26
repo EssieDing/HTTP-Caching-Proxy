@@ -57,8 +57,11 @@ void * ProxyServer::processRequest(void * input_client){
     }
     if(request.method_name == "GET") {
         cout<<"\n\n get test start \n\n";
-        processGET(*client,request,buf,byte_count);
+        processGET(*client,buf,byte_count);
         cout<<"\n\n get test successfully \n\n";
+    }
+    if(request.method_name == "POST") {
+        processPOST(*client,buf,byte_count);
     }
 
     return NULL;////////////////////
@@ -132,7 +135,7 @@ void * ProxyServer::processCONNECT(Client * client){
 
 
 
-void ProxyServer::processGET(ProxyServer::Client & client, Request & request, const char * message, int message_bytes){
+void ProxyServer::processGET(ProxyServer::Client & client, const char * message, int message_bytes){
 
     //ssize_t send(int sockfd, const char *buf, size_t len, int flags);
     //ssize_t recv(int socket, void *buffer, size_t length, int flags);
@@ -157,7 +160,7 @@ void ProxyServer::processGET(ProxyServer::Client & client, Request & request, co
     // prase the response, determine chunked or not
     string temp_response(server_rsp);
     string response=temp_response.substr(0,server_rsp_bytes);//////
-    cout<<response<<endl;//////////////////////test
+    // cout<<response<<endl;//////////////////////test
     // bool chunked=determineChunked(response);
     bool chunked=determineChunked(server_rsp);
 
@@ -249,7 +252,7 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         int rsp_len = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), 0);
 
         if(rsp_len==-1){
-            cout<<"Content Length: recv unsuccessfully.\n";
+            cout<<"GET-Content Length: recv unsuccessfully.\n";
             return;
         }
         if (rsp_len == 0) {
@@ -306,6 +309,70 @@ int ProxyServer::getContentLength(char * server_rsp,int server_rsp_bytes){
 
     cout<<" get content length finished.\n";
     return content_length;
+}
+
+
+void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int message_bytes){
+    cout<<"enter POST test:\n";
+    // get content length
+    int content_length=getContentLength(message,message_bytes);
+
+    // get full request according to the remaining content_length
+    // client->proxy
+    cout<<"client->proxy\n";
+    int current_length=0;
+    string full_request(message, message_bytes);
+
+    while (current_length < content_length) {
+    char new_client_req[65536];
+    int req_len = recv(client.socket_fd, new_client_req, sizeof(new_client_req), 0);
+
+    if(req_len==-1){
+        cout<<"POST-Content Length: recv unsuccessfully.\n";
+        return;
+    }
+    if (req_len == 0) {
+        break; // supposed to get full request
+    }
+    else{
+        string req_now(new_client_req, req_len);
+        full_request = full_request + req_now;
+        current_length = current_length + req_len;
+        }
+    }
+
+    // send request: proxy->server
+    cout<<"proxy->server\n";
+    vector<char> request;
+    for (size_t i = 0; i < full_request.length(); i++) {
+        request.push_back(full_request[i]);
+    }
+    const char * req_sent = request.data();
+
+    int req_to_server;
+    if ((req_to_server = send(client.server_fd, req_sent, full_request.size(),0))==-1){
+        cout<<"POST: send to server unsuccessfully.\n";
+        return;
+    }
+
+    // recv response: server->proxy
+    cout<<"server->proxy\n";
+    char server_rsp[65536];
+    int server_rsp_len = recv(client.server_fd, server_rsp, sizeof(server_rsp), 0);
+    if(server_rsp_len==-1){
+        cout<<"POST: recv from server unsuccessfully.\n";
+        return;
+    }
+    // send response: proxy->client
+    cout<<"proxy->client\n";
+    int rsp_to_client;
+    if ((rsp_to_client = send(client.socket_fd, server_rsp,server_rsp_len,0))==-1){
+        cout<<"POST: send to client unsuccessfully.\n";
+        return;
+    }
+
+    cout<<"POST test Successfully\n";
+
 }
 
 
