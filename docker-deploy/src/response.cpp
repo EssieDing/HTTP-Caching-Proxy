@@ -30,7 +30,12 @@ void Response::parseResponse(){
 
         // get private_directive;
         size_t private_found=all_content.find("private");
-        if(private_found!=string::npos){private_directive=true;}else{private_directive=false;}
+        if(private_found!=string::npos){
+            private_directive=true;
+            no_store=true;
+        }else{
+            private_directive=false;
+        }
 
         // get public_directive;
         size_t public_found=all_content.find("public");
@@ -89,6 +94,10 @@ int Response::calculateAge(){
     }
 
     string ma_str=temp.substr(0,ma_end_found);
+    if(ma_str.find(".")!=string::npos){
+        cout<<"max_age is not int.\n";
+        return -100;
+    }
     int ma=atoi(ma_str.c_str()); //  C-string
 
     // get Age:
@@ -99,7 +108,7 @@ int Response::calculateAge(){
     // max_age = max_age - Age
     ma=ma-age;
     if(ma<0){
-        cout<<"max_age - Age error.\n";
+        cout<<"max_age<0 error.\n";
         return -100;
     }
 
