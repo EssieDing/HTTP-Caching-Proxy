@@ -414,7 +414,8 @@ void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const 
                 }
             }
         } else {
-            if (expireCheck(client, match) == false){ // must_revalidate and expires
+            if (expireCheck(client, match) == true){ // is expired, must_revalidate and expires
+                cache->remove(request_line); // expired, remove cache from mycache
                 processGET(client, message, message_bytes);
             } else {
                 const char * return_msg = match.all_content.c_str();
@@ -489,7 +490,7 @@ bool expireCheck_maxAge(int max_age,string timeStr){
   return seconds > max_age;
 }
 
-bool ProxyServer::expireCheck(Client & client, Response & response){
+bool ProxyServer::expireCheck(Client & client, Response & response){ // true: isExpired
     if (response.max_age != -100){
         if (expireCheck_maxAge(response.max_age, response.date)){
             return true;
