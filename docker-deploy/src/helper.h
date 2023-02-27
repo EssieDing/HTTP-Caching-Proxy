@@ -102,7 +102,7 @@ int setUpClient(const char *hostname, const char *myPort){
   return socket_fd;
 }
 
-int acceptClients(int server_fd, const char * ip){
+int acceptClients(int server_fd, string & ip){
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connection_fd;
@@ -112,9 +112,76 @@ int acceptClients(int server_fd, const char * ip){
     return -1;
   } //if
 
-  ip = inet_ntoa(((struct sockaddr_in *)&socket_addr)->sin_addr); // transfer into string ip
-
+  struct sockaddr_in * addr = (struct sockaddr_in *)&socket_addr;
+  ip = inet_ntoa(addr->sin_addr);
+  
   return client_connection_fd;
 }
 
+// return current Time string
+string getCurrentTimeStr() {
+  time_t currentTime = time(0);
+  return timeString(currentTime);
+}
 
+string timeString(time_t time) {
+  string timeStr = string(asctime(gmtime(&time)));
+  return timeStr.substr(0, timeStr.find("\n"));
+}
+
+time_t getUTCurrentime(){
+  time_t rawtime;
+  struct tm * ptm;
+  time ( &rawtime );
+  ptm = gmtime (&rawtime);
+  return mktime(ptm);
+}
+
+// time_t getUTCtime2(string rawTimeStr){
+//   struct tm ptm= {0};
+//   getTimeStruct(ptm, rawTimeStr);
+//   time_t raw_time = mktime(&ptm);
+//   return mktime(gmtime(&raw_time));
+// }
+
+tm * getUTCtime(string rawTimeStr){
+  struct tm ptm= {0};
+  getTimeStruct(ptm, rawTimeStr);
+  time_t raw_time = mktime(&ptm);
+  return gmtime(&raw_time);
+}
+
+unordered_map<string,int> monthMap = {
+    {"Jan", 1},
+    {"Feb", 2},
+    {"Mar", 3},
+    {"Apr", 4},
+    {"May", 5},
+    {"Jun", 6},
+    {"Jul", 7},
+    {"Aug", 8},
+    {"Sep", 9},
+    {"Oct", 10},
+    {"Nov", 11},
+    {"Dec", 12},
+};
+
+void getTimeStruct (struct tm & time, string timeStr){
+    time.tm_year = atoi((timeStr.substr(12,4)).c_str())-1900;
+    time.tm_mon = monthMap[timeStr.substr(8,3)]-1;
+    time.tm_mday = atoi((timeStr.substr(5,2)).c_str());
+    time.tm_hour = atoi((timeStr.substr(17,2)).c_str());
+    time.tm_min = atoi((timeStr.substr(20,2)).c_str());
+    time.tm_sec = atoi((timeStr.substr(23,2)).c_str());
+}
+
+
+
+//get string expiretime
+string get_expire_time(int max_age, string res_date){
+  struct tm t={0};
+  getTimeStruct(t, res_date);
+  time_t ans = mktime(&t)+max_age;
+  string myans = ctime(&ans);/* 转换成 时间格式（UTC），给打印ID： cache expire at XXX 使用*/
+  return myans;
+}

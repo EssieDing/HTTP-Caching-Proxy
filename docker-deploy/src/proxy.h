@@ -9,41 +9,56 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
+#include <mutex>
+
 
 #include "request.h"
+#include "response.h"
+#include "cache.h"
+
+using namespace std;
 
 class ProxyServer {
     public: //
     const char * port_num;
+    //Cache * cache;
     class Client{
         public:
             int socket_fd;
             int id;
-            const char * ip;
+            string ip;
             int server_fd;/////
             Client(int fd, int id, const char *ip): socket_fd(fd), server_fd(-1), id(id), ip(ip){};
     };
+    Cache * cache;
     // typedef struct client_t client;
 
     public:
-    explicit ProxyServer (const char * port_num): port_num(port_num){};
+    ProxyServer (const char * port_num): port_num(port_num){
+      cache = new Cache(10);
+    };
 
    void run();
-    static void * processRequest(void * input_client);
+    void * processRequest(void * input_client);
 
     // Connect method
-    static void * processCONNECT(Client * client);
+    void * processCONNECT(Client * client);
 
     // GET method
-    static void processGET(ProxyServer::Client & client, const char * message, int message_bytes);
-    static void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
-    static bool determineChunked(char * rsp);//string
+    void processGET(ProxyServer::Client & client, const char * message, int message_bytes);
+    void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
+    bool determineChunked(char * rsp);//string
     
-    static void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes); // Content-Length: <length>
-    static int getContentLength(char * server_rsp, int server_rsp_bytes);
+    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes,  Request & request); // Content-Length: <length>
+    int getContentLength(char * server_rsp, int server_rsp_bytes);
 
 
     // POST method
-    static void processPOST(ProxyServer::Client & client, char * message, int message_bytes);
-};
+    void processPOST(ProxyServer::Client & client, char * message, int message_bytes);
 
+    // Cache control
+    void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes);
+    bool ProxyServer::validCheck(Client & client, Response & response, string request);
+    bool ProxyServer::expireCheck(Client & client, Response & response);
+    void ProxyServer::cacheCheck (Response & response, string request_line);
+};

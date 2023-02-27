@@ -1,5 +1,7 @@
 #include "proxy.h"
 #include "helper.h"
+#include <unordered_map>
+#include <map>
 #include <vector>
 #include <sys/socket.h>
 #include <string.h>
@@ -8,27 +10,28 @@
 using namespace std;
 #define URL_LIMIT 65536
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void ProxyServer::run(){
     int listen_socket_fd = setUpServer(this->port_num);
-    const char * ip;
+    string ip;
     int client_id;
     while (true) {
         int accept_socket_fd = acceptClients(listen_socket_fd, ip);
-        pthread_t thread;
-        pthread_mutex_lock(&mutex);
+        //pthread_t thread;
+        //pthread_mutex_lock(&p_mutex);
         Client * client = new Client(accept_socket_fd, client_id, ip);
         //Client client(accept_socket_fd, client_id, ip);
 
         // thread
         client_id++;
+        client->id = client_id;
         //processRequest(&client); 
-        pthread_mutex_unlock(&mutex);
-        pthread_create(&thread, NULL, processRequest, client);
+        //pthread_mutex_unlock(&p_mutex);
+        //pthread_create(&thread, NULL, processRequest, client);
         //thread(processRequest, ref(input_client)).detach();
-        //thread t(&ProxyServer::processRequest, this, client);
-        //t.join();
+        thread t(&ProxyServer::processRequest, this, client);
+        t.join();
     }
 }
 
@@ -134,6 +137,7 @@ void * ProxyServer::processCONNECT(Client * client){
 
 
 
+    
 
 void ProxyServer::processGET(ProxyServer::Client & client, const char * message, int message_bytes){
 
@@ -188,10 +192,13 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
             }
         // for non-chunked (length)
         cout<<"enter content length:\n";
-        getNoChunked(client,server_rsp,server_rsp_bytes);
+        string request_str (server_rsp, server_rsp_bytes);
+        Request request(request_str);
+        getNoChunked(client,server_rsp,server_rsp_bytes, request);
         cout<<"Content length finished.\n"; 
     }
 }
+
 
 bool ProxyServer::determineChunked(char * rsp){// string rsp
     // size_t ans;
@@ -234,7 +241,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     }
 }
 
-void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes){
+void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Request & request){
     string full_message(server_rsp, server_rsp_bytes);
     // get Content-Length: 
     // help to determine whether we have received the full message. 
@@ -281,7 +288,11 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         return;
     }
 
+    Response rsp(full_message);
 
+    if (rsp.status_code == "200"){
+        cacheCheck(rsp, request.request_line);
+    }
     // if not get: ??
 }
 
@@ -377,5 +388,134 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
 
 
 
+void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes){
+    string request_line = request.request_line; 
+    string requestStr (message, message_bytes);
+    Response match = cache->get(request_line);
+    // check if the request startline is in the cache map
+    if (match.all_content.empty()){ // has not found in cache map, cache miss
+    // req and response whole process
+        // printLog(": not in cache")
+        processGET(client, message, message_bytes); // include send req to server and process response (check and cache)
+        
+    } else { // find in the cache map, cache hit, match is not empty
+        // check no_cache
+        if (match.no_cache){ // the response must be validated with the origin server before each reuse
+            // printLog(": in cache, requires validation")
+            // revalidate with origin server
+            if (validCheck(client, match, requestStr) == false) {
+                processGET(client, message, message_bytes);
+            } else {
+                const char * return_msg = match.all_content.c_str();
+                int return_msg_bytes = send(client.socket_fd, return_msg, sizeof(return_msg), 0);
+                if (return_msg_bytes < 0){
+                    return;
+                }
+            }
+        } else {
+            if (expireCheck(client, match) == false){ // must_revalidate and expires
+                processGET(client, message, message_bytes);
+            } else {
+                const char * return_msg = match.all_content.c_str();
+                int return_msg_bytes = send(client.socket_fd, return_msg, sizeof(return_msg), 0);
+                if (return_msg_bytes < 0){
+                    return;
+                }
+            }
+        }
+    }   
+}
 
+bool ProxyServer::validCheck(Client & client, Response & response, string request){
+    if (response.etag == "" && response.last_modified == "") {
+        return false;
+    }
+    if (response.etag != "") {
+        string modified_etag = "If-None-Match: "+ response.etag +"\r\n";
+        request.insert(request.length()-2, modified_etag);
+    }
+    if (response.last_modified != "") {
+        string modified_lastModified = "If-Modified-Since: "+ response.last_modified +"\r\n";
+        request.insert(request.length()-2, modified_lastModified);
+    }
+    const char * new_request = request.c_str();
+    int new_request_bytes = send(client.server_fd, new_request, request.length() + 1, 0);
+    if (new_request_bytes < 0) {
+        // printLog
+        return false;
+    }
+
+    char new_server_rsp[65536];
+    int new_server_rsp_bytes = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), 0);
+    if (new_server_rsp_bytes < 0) {
+        //printLog
+        return false;
+    }
+    std::string new_server_rsp_str(new_server_rsp, new_server_rsp_bytes);
+    Response new_response (new_server_rsp_str);
+    // check status code
+    if (new_response.status_code == "304") {
+        // printLog("not modified")
+        return true;
+    } else {
+        return false;
+    }
+};
+
+bool expireCheck_Expires (string timeStr){
+  string current = timeString(getUTCurrentime());
+  struct tm t1 = {0};
+  getTimeStruct(t1, current);
+
+//   struct tm t2 = {0};
+//   getTimeStruct(t2, timeStr);
+  struct tm * t2 = getUTCtime(timeStr);
+
+  int seconds = difftime(mktime(t2), mktime(&t1));//t1-t2
+  return seconds < 0;
+}
+
+bool expireCheck_maxAge(int max_age,string timeStr){
+  string current = timeString(getUTCurrentime());
+ 
+  struct tm t1 = {0};
+  getTimeStruct(t1, current);
+
+  struct tm * t2 = getUTCtime(timeStr);
+  //getTimeStruct(t2, timeStr);
+
+  int seconds = difftime(mktime(&t1), mktime(t2));//t1-t2
+  return seconds > max_age;
+}
+
+bool ProxyServer::expireCheck(Client & client, Response & response){
+    if (response.max_age != -100){
+        if (expireCheck_maxAge(response.max_age, response.date)){
+            return true;
+        }
+    } else if (response.expires != "") {
+        if (expireCheck_Expires(response.expires)){
+            return true;
+        }
+    }
+    return false;
+};
+
+
+// response status code is 200 can be cached
+void ProxyServer::cacheCheck (Response & response, string request_line) { // chunked and unchunked both need?
+    if (response.no_store) { // should not be cached
+        // printlog ": not cacheable because NO STORE" << endl;
+        return;
+    } else {
+        if (response.no_cache) { // should be cached
+        //printlog ": cached, but requires re-validation"
+        } else if (response.max_age != -1) {
+            //printLog
+        } else if (response.expires == "") {
+            //printLog
+        }
+        cache->put(request_line, response);
+    }
+};
 
