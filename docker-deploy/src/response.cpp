@@ -104,9 +104,13 @@ int Response::calculateAge(){
     int ma=atoi(ma_str.c_str()); //  C-string
 
     // get Age:
+    int age;
     size_t age_found=all_content.find_first_of("Age: ");
+    if(age_found==string::npos){age=0;}
+    else{
     string a_str=all_content.substr(age_found+strlen("Age: "));
-    int age=atoi(a_str.c_str());
+    age=atoi(a_str.c_str());
+    }
     
     // max_age = max_age - Age
     ma=ma-age;
