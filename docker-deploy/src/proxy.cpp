@@ -23,6 +23,7 @@ void ProxyServer::run(){
         Client * client = new Client(accept_socket_fd, client_id, ip);
         //Client client(accept_socket_fd, client_id, ip);
 
+        cout<<"\nip: "<<ip<<endl;
         // thread
         client_id++;
         client->id = client_id;

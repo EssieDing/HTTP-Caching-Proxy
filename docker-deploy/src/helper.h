@@ -114,7 +114,8 @@ int acceptClients(int server_fd, string & ip){
 
   struct sockaddr_in * addr = (struct sockaddr_in *)&socket_addr;
   ip = inet_ntoa(addr->sin_addr);
-  
+  // ip = inet_ntoa(((struct sockaddr_in *)&socket_addr)->sin_addr); // transfer into string ip
+
   return client_connection_fd;
 }
 
