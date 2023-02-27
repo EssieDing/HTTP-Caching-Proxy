@@ -47,12 +47,12 @@ void Request::parseRequest(){
     }
     }
     catch (exception & e) {
-        cout<<"failed to parse request.";///////
+        cout<<"failed to parse request.\n";///////
         return;////////
   }
 }
 
-  bool Request::validDetermine(){
+bool Request::validDetermine(){
     if(method_name==" "){
         return false;
     }
