@@ -57,6 +57,9 @@ void Response::parseResponse(){
         // get last_modified;
         last_modified=findHeader("Last-Modified: ");
 
+        // get date
+        date=findHeader("Date: ");
+
     }catch (exception & e) {
         cout<<"failed to parse response.\n";///////
         return;////////

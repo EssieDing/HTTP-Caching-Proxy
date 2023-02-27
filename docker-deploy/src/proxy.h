@@ -19,9 +19,9 @@ class ProxyServer {
         public:
             int socket_fd;
             int id;
-            const char * ip;
+            string ip;
             int server_fd;/////
-            Client(int fd, int id, const char *ip): socket_fd(fd), server_fd(-1), id(id), ip(ip){};
+            Client(int fd, int id, string ip): socket_fd(fd), server_fd(-1), id(id), ip(ip){};
     };
     // typedef struct client_t client;
 

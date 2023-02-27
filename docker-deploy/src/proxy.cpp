@@ -12,7 +12,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void ProxyServer::run(){
     int listen_socket_fd = setUpServer(this->port_num);
-    const char * ip;
+    string ip;
     int client_id;
     while (true) {
         int accept_socket_fd = acceptClients(listen_socket_fd, ip);
@@ -21,6 +21,7 @@ void ProxyServer::run(){
         Client * client = new Client(accept_socket_fd, client_id, ip);
         //Client client(accept_socket_fd, client_id, ip);
 
+        cout<<"\nip: "<<ip<<endl;
         // thread
         client_id++;
         //processRequest(&client); 

@@ -102,7 +102,7 @@ int setUpClient(const char *hostname, const char *myPort){
   return socket_fd;
 }
 
-int acceptClients(int server_fd, const char * ip){
+int acceptClients(int server_fd, string & ip){
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connection_fd;
@@ -112,7 +112,9 @@ int acceptClients(int server_fd, const char * ip){
     return -1;
   } //if
 
-  ip = inet_ntoa(((struct sockaddr_in *)&socket_addr)->sin_addr); // transfer into string ip
+  struct sockaddr_in * addr = (struct sockaddr_in *)&socket_addr;
+  ip = inet_ntoa(addr->sin_addr);
+  // ip = inet_ntoa(((struct sockaddr_in *)&socket_addr)->sin_addr); // transfer into string ip
 
   return client_connection_fd;
 }

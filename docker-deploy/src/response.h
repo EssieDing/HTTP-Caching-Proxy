@@ -18,6 +18,7 @@ class Response {
         string status_code;
         string etag;
         string last_modified;
+        string date;
 
         Response():
             all_content(""),
@@ -32,7 +33,7 @@ class Response {
             expires(""),
             status_code(""), 
             etag(""),
-            last_modified("") {}
+            last_modified(""),date("") {}
         
         Response(string content): all_content(content){
             parseResponse();
