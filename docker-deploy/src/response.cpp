@@ -60,8 +60,11 @@ void Response::parseResponse(){
         // get date
         date=findHeader("Date: ");
 
+<<<<<<< HEAD
         printAll();
 
+=======
+>>>>>>> 00276edb963eafdb88a084a5e9fec1043bbc9ddc
     }catch (exception & e) {
         cout<<"failed to parse response.\n";///////
         return;////////
@@ -170,6 +173,7 @@ string Response::getStatusCode(){
     }
     return status;
 }
+<<<<<<< HEAD
 
 void Response::printAll(){
     cout<<"all_content "<<all_content<<endl;////vector?
@@ -187,3 +191,5 @@ void Response::printAll(){
     cout<<"last_modified "<<last_modified<<endl;
     cout<<"date "<<date<<endl;
 }
+=======
+>>>>>>> 00276edb963eafdb88a084a5e9fec1043bbc9ddc

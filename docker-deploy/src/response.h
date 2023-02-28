@@ -43,5 +43,8 @@ class Response {
         int calculateMaxStale();
         string findHeader(string target);
         string getStatusCode();
+<<<<<<< HEAD
         void printAll();
+=======
+>>>>>>> 00276edb963eafdb88a084a5e9fec1043bbc9ddc
     };
