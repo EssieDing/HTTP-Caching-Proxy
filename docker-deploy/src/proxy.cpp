@@ -29,14 +29,14 @@ void ProxyServer::run(){
         client_id++;
         client->id = client_id;
 
-        thread t(&ProxyServer::processRequest, this, client);
-        t.join();
+        //thread t(&ProxyServer::processRequest, this, client);
+        //t.join();
         //processRequest(&client); 
         //pthread_mutex_unlock(&p_mutex);
         //pthread_create(&thread, NULL, processRequest, client);
         //std::thread(processRequest, std::ref(client)).detach();
-        //thread t(&ProxyServer::processRequest, this, client);
-        //t.join();
+        thread t(&ProxyServer::processRequest, this, std::ref(client));
+        t.detach();
     }
 }
 
@@ -62,14 +62,12 @@ void * ProxyServer::processRequest(void * input_client){
 
     if(request.method_name == "CONNECT") {
         processCONNECT(client);
-    }
-    if(request.method_name == "GET") {
+    } else if(request.method_name == "GET") {
         cout<<"\n\n get test start \n\n";
         //processGET(*client,buf,byte_count);
         cacheGet(*client, request, buf, byte_count);
         cout<<"\n\n get test successfully \n\n";
-    }
-    if(request.method_name == "POST") {
+    } else if(request.method_name == "POST") {
         processPOST(*client,buf,byte_count);
     }
 
@@ -77,19 +75,18 @@ void * ProxyServer::processRequest(void * input_client){
 }
 
 
-void * ProxyServer::processCONNECT(Client * client){
+void ProxyServer::processCONNECT(Client * client){
     // step2: send an http response of "200 ok" back to the browser
     int byte_count = send(client->socket_fd, "HTTP/1.1 200 OK\r\n\r\n", 19, 0);
-    if (byte_count <= 0) {
-        return NULL;
+    if (byte_count < 0) {
+        return;
     }
     // step3: use IO multiplexing (select())
     fd_set readfds;
-    int maxfd = 0;
     int rv = 0;
     int client_socket = client->socket_fd;
     int server_socket = client->server_fd;
-
+    int maxfd = client_socket > server_socket ? client_socket : server_socket;
     char buf[URL_LIMIT] = {0};
     while (true) {
         int byte_count, byte_count_send;
@@ -99,7 +96,6 @@ void * ProxyServer::processCONNECT(Client * client){
         FD_ZERO(&readfds);
         FD_SET(client_socket, &readfds); // socket one
         FD_SET(server_socket, &readfds); // socket two
-        maxfd = client_socket > server_socket ? client_socket : server_socket;
         rv = select(maxfd + 1, &readfds, NULL, NULL, NULL);
         if (rv == -1) {
             perror("select"); // error occurred in select()
@@ -112,13 +108,13 @@ void * ProxyServer::processCONNECT(Client * client){
                 cout << "connect recv1 " << byte_count << endl;
                 if(byte_count <= 0){
                     perror("recv error");
-                    return NULL;
+                    return;
                 }
                 byte_count_send = send(server_socket, buf, byte_count, MSG_NOSIGNAL);
                 cout << "connect send1 " << byte_count << endl;
                 if (byte_count_send <= 0){
                     perror("send error");
-                    return NULL;
+                    return;
                 }
 
             }
@@ -127,13 +123,13 @@ void * ProxyServer::processCONNECT(Client * client){
                 cout << "connect recv2 " << byte_count << endl;
                 if(byte_count <= 0){
                     perror("recv error");
-                    return NULL;
+                    return;
                 }
                 byte_count_send = send(client_socket, buf, byte_count, MSG_NOSIGNAL);
-                cout << "connect sned2 " << byte_count << endl;
+                cout << "connect send2 " << byte_count << endl;
                 if (byte_count_send <= 0){
                     perror("send error");
-                    return NULL;
+                    return;
                 }
             }
         }
@@ -170,6 +166,7 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
     // prase the response, determine chunked or not
     string temp_response(server_rsp);
     string response=temp_response.substr(0,server_rsp_bytes);//////
+    Response rsp(response);
     // cout<<response<<endl;//////////////////////test
     // bool chunked=determineChunked(response);
     bool chunked=determineChunked(server_rsp);
@@ -200,7 +197,12 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
         cout<<"enter content length:\n";
         string request_str (server_rsp, server_rsp_bytes);
         Request request(request_str);
-        getNoChunked(client,server_rsp,server_rsp_bytes, request);
+        getNoChunked(client,server_rsp,server_rsp_bytes, request, rsp);
+
+        if (rsp.status_code == "200"){
+            cout << "enterrrrrrrrrrrrrrr code    " << rsp.status_code <<endl;
+            cacheCheck(rsp, request.request_line);
+        }
         cout<<"Content length finished.\n"; 
     }
 }
@@ -247,7 +249,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     }
 }
 
-void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Request & request){
+void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Request & request, Response & rsp){
     string full_message(server_rsp, server_rsp_bytes);
     // get Content-Length: 
     // help to determine whether we have received the full message. 
@@ -286,6 +288,7 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         message.push_back(full_message[i]);
     }
     const char * msg_sent = message.data();
+    rsp.all_content = full_message;
 
     // send to client
     int rsp_to_client;
@@ -294,11 +297,6 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         return;
     }
 
-    Response rsp(full_message);
-
-    if (rsp.status_code == "200"){
-        cacheCheck(rsp, request.request_line);
-    }
     // if not get: ??
 }
 
@@ -395,11 +393,13 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
 
 
 void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes){
-    string request_line = request.request_line; 
+    cout << "cache get enter" << endl;
+    string request_line = request.request_line;
     string requestStr (message, message_bytes);
     Response match = cache->get(request_line);
+    cout << "max_age" << match.max_age << endl;
     // check if the request startline is in the cache map
-    if (match.all_content.empty()){ // has not found in cache map, cache miss
+    if (match.all_content == ""){ // has not found in cache map, cache miss
     // req and response whole process
         // printLog(": not in cache")
         processGET(client, message, message_bytes); // include send req to server and process response (check and cache)
@@ -409,7 +409,7 @@ void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const 
         if (match.no_cache){ // the response must be validated with the origin server before each reuse
             // printLog(": in cache, requires validation")
             // revalidate with origin server
-            if (validCheck(client, match, requestStr) == false) {
+            if (validCheck(client, match, requestStr) == false) { // false: modified, invalid, need revalidate
                 processGET(client, message, message_bytes);
             } else {
                 const char * return_msg = match.all_content.c_str();
@@ -419,7 +419,7 @@ void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const 
                 }
             }
         } else {
-            if (expireCheck(client, match) == true){ // is expired, must_revalidate and expires
+            if (expireCheck(client, match) == true){ // true: is expired, must_revalidate and expires
                 cache->remove(request_line); // expired, remove cache from mycache
                 processGET(client, message, message_bytes);
             } else {
@@ -478,7 +478,7 @@ bool expireCheck_Expires (string timeStr){
 //   getTimeStruct(t2, timeStr);
   struct tm * t2 = getUTCtime(timeStr);
 
-  int seconds = difftime(mktime(t2), mktime(&t1));//t1-t2
+  int seconds = difftime(mktime(t2), mktime(&t1));//t1-t2 
   return seconds < 0;
 }
 
@@ -497,7 +497,7 @@ bool expireCheck_maxAge(int max_age,string timeStr){
 
 bool ProxyServer::expireCheck(Client & client, Response & response){ // true: isExpired
     if (response.max_age != -100){
-        if (expireCheck_maxAge(response.max_age, response.date)){
+        if (expireCheck_maxAge(response.max_age, response.date)){ // true: is expired
             return true;
         }
     } else if (response.expires != "") {
@@ -517,9 +517,9 @@ void ProxyServer::cacheCheck (Response & response, string request_line) { // chu
     } else {
         if (response.no_cache) { // should be cached
         //printlog ": cached, but requires re-validation"
-        } else if (response.max_age != -1) {
+        } else if (response.max_age != -100) {
             //printLog
-        } else if (response.expires == "") {
+        } else if (response.expires != "") {
             //printLog
         }
         cache->put(request_line, response);

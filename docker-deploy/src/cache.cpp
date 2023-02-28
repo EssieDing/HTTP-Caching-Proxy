@@ -1,19 +1,22 @@
 #include "cache.h"
 
 Response Cache::get(string request_line) {
+  cout << "get cache: " << request_line << endl; 
+  cout << "cache size: " << cache_map.size() << endl;
     mtx.lock();
-    std::unordered_map<std::string, Response>::iterator it = cache_map.begin();
+    unordered_map<std::string, Response>::iterator it = cache_map.begin();
     it = cache_map.find(request_line);
     if (cache_map.count(request_line) == 0) {
         mtx.unlock();
         return Response(); // create new response and return
     }
     mtx.unlock();
-    Response rsp(it->second);
-    return rsp;
+    return it->second;
 };
 
 void Cache::put(string & request_line, Response response){
+  cout << "put into cache: " << response.response_line << endl;
+  cout << "cache size: " << cache_map.size() << endl;
       mtx.lock();
       if (cache_map.size() == size && cache_map.count(request_line) == 0){
         cache_map.erase (cache_map.begin());
@@ -25,6 +28,7 @@ void Cache::put(string & request_line, Response response){
     };
 
 void Cache::remove(string & request_line){
+      cout << "remove from cache" << request_line << endl;
       mtx.lock();
       cache_map.erase(request_line);
       // printLog(-1, ": NOTE " + request_line + " removed from cache")
