@@ -10,10 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <mutex>
-
-
-#include "request.h"
-#include "response.h"
 #include "cache.h"
 
 using namespace std;
@@ -57,8 +53,8 @@ class ProxyServer {
     void processPOST(ProxyServer::Client & client, char * message, int message_bytes);
 
     // Cache control
-    void ProxyServer::cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes);
-    bool ProxyServer::validCheck(Client & client, Response & response, string request);
-    bool ProxyServer::expireCheck(Client & client, Response & response);
-    void ProxyServer::cacheCheck (Response & response, string request_line);
+    void cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes);
+    bool validCheck(Client & client, Response & response, string request);
+    bool expireCheck(Client & client, Response & response);
+    void cacheCheck (Response & response, string request_line);
 };

@@ -13,6 +13,7 @@ using namespace std;
 pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void ProxyServer::run(){
+
     int listen_socket_fd = setUpServer(this->port_num);
     string ip;
     int client_id;
@@ -27,12 +28,15 @@ void ProxyServer::run(){
         // thread
         client_id++;
         client->id = client_id;
+
+        thread t(&ProxyServer::processRequest, this, client);
+        t.join();
         //processRequest(&client); 
         //pthread_mutex_unlock(&p_mutex);
         //pthread_create(&thread, NULL, processRequest, client);
-        //thread(processRequest, ref(input_client)).detach();
-        thread t(&ProxyServer::processRequest, this, client);
-        t.join();
+        //std::thread(processRequest, std::ref(client)).detach();
+        //thread t(&ProxyServer::processRequest, this, client);
+        //t.join();
     }
 }
 
@@ -61,7 +65,8 @@ void * ProxyServer::processRequest(void * input_client){
     }
     if(request.method_name == "GET") {
         cout<<"\n\n get test start \n\n";
-        processGET(*client,buf,byte_count);
+        //processGET(*client,buf,byte_count);
+        cacheGet(*client, request, buf, byte_count);
         cout<<"\n\n get test successfully \n\n";
     }
     if(request.method_name == "POST") {

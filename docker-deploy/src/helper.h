@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -119,39 +120,6 @@ int acceptClients(int server_fd, string & ip){
   return client_connection_fd;
 }
 
-// return current Time string
-string getCurrentTimeStr() {
-  time_t currentTime = time(0);
-  return timeString(currentTime);
-}
-
-string timeString(time_t time) {
-  string timeStr = string(asctime(gmtime(&time)));
-  return timeStr.substr(0, timeStr.find("\n"));
-}
-
-time_t getUTCurrentime(){
-  time_t rawtime;
-  struct tm * ptm;
-  time ( &rawtime );
-  ptm = gmtime (&rawtime);
-  return mktime(ptm);
-}
-
-// time_t getUTCtime2(string rawTimeStr){
-//   struct tm ptm= {0};
-//   getTimeStruct(ptm, rawTimeStr);
-//   time_t raw_time = mktime(&ptm);
-//   return mktime(gmtime(&raw_time));
-// }
-
-tm * getUTCtime(string rawTimeStr){
-  struct tm ptm= {0};
-  getTimeStruct(ptm, rawTimeStr);
-  time_t raw_time = mktime(&ptm);
-  return gmtime(&raw_time);
-}
-
 unordered_map<string,int> monthMap = {
     {"Jan", 1},
     {"Feb", 2},
@@ -176,7 +144,38 @@ void getTimeStruct (struct tm & time, string timeStr){
     time.tm_sec = atoi((timeStr.substr(23,2)).c_str());
 }
 
+string timeString(time_t time) {
+  string timeStr = string(asctime(gmtime(&time)));
+  return timeStr.substr(0, timeStr.find("\n"));
+}
 
+// return current Time string
+string getCurrentTimeStr() {
+  time_t currentTime = time(0);
+  return timeString(currentTime);
+}
+
+time_t getUTCurrentime(){
+  time_t rawtime;
+  struct tm * ptm;
+  time ( &rawtime );
+  ptm = gmtime (&rawtime);
+  return mktime(ptm);
+}
+
+// time_t getUTCtime2(string rawTimeStr){
+//   struct tm ptm= {0};
+//   getTimeStruct(ptm, rawTimeStr);
+//   time_t raw_time = mktime(&ptm);
+//   return mktime(gmtime(&raw_time));
+// }
+
+tm * getUTCtime(string rawTimeStr){
+  struct tm ptm= {0};
+  getTimeStruct(ptm, rawTimeStr);
+  time_t raw_time = mktime(&ptm);
+  return gmtime(&raw_time);
+}
 
 //get string expiretime
 string get_expire_time(int max_age, string res_date){
