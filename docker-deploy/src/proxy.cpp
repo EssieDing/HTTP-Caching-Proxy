@@ -16,17 +16,19 @@ void ProxyServer::run(){
     int client_id;
     while (true) {
         int accept_socket_fd = acceptClients(listen_socket_fd, ip);
-        pthread_t thread;
-        pthread_mutex_lock(&mutex);
+        // pthread_t thread;
+        // pthread_mutex_lock(&mutex);
         Client * client = new Client(accept_socket_fd, client_id, ip);
         //Client client(accept_socket_fd, client_id, ip);
 
         cout<<"\nip: "<<ip<<endl;
         // thread
         client_id++;
-        //processRequest(&client); 
-        pthread_mutex_unlock(&mutex);
-        pthread_create(&thread, NULL, processRequest, client);
+        // processRequest(&client); 
+        // pthread_mutex_unlock(&mutex);
+        // pthread_create(&thread, NULL, processRequest, client);
+        thread t(&ProxyServer::processRequest, this, client);
+        t.join();
         //thread(processRequest, ref(input_client)).detach();
         //thread t(&ProxyServer::processRequest, this, client);
         //t.join();
