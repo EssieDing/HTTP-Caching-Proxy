@@ -1,51 +1,96 @@
-1: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:39 2023
-1: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
-1: Received "HTTP/1.1 200 OK" from httpbin.org
-1: NOTE  Content Length
-1: Responding "HTTP/1.1 200 OK"
-2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:44 2023
-3: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:44 2023
-4: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:46 2023
-5: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:46 2023
-5: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-5: Received "HTTP/1.1 200 OK" from ocsp.pki.goog
-5: Responding "HTTP/1.1 200 OK"
-6: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:46 2023
-7: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:46 2023
-10: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:47 2023
-11: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:47 2023
-8: "CONNECT fonts.gstatic.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:47 2023
-12: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:47 2023
-14: "CONNECT static.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:47 2023
-14: WARNING method name is
-15: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:48 2023
-17: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-19: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-20: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-24: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-18: "CONNECT tpc.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-24: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
-24: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-24: NOTE  Content Length
-24: Responding "HTTP/1.1 200 OK"
-23: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-26: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:49 2023
-26: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
-26: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-26: NOTE  Content Length
-26: Responding "HTTP/1.1 200 OK"
-23: WARNING method name is
-23: WARNING method name is
-9: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:38:50 2023
-27: "CONNECT www.googleadservices.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:00 2023
-28: "CONNECT rr5---sn-5ualdnls.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:03 2023
-29: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:21 2023
-30: "CONNECT ad.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:22 2023
-32: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:22 2023
-33: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:27 2023
-33: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
-33: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-33: NOTE  Content Length
-33: Responding "HTTP/1.1 200 OK"
-34: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:50 2023
-35: "CONNECT ade.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:39:53 2023
+1: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:51:50 2023
+2: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:00 2023
+2: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+2: Received "HTTP/1.1 200 OK" from httpbin.org
+2: NOTE  Content Length
+2: Responding "HTTP/1.1 200 OK"
+4: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:35 2023
+4: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+4: Received "HTTP/1.1 200 OK" from httpbin.org
+4: NOTE  Content Length
+4: Responding "HTTP/1.1 200 OK"
+5: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:45 2023
+6: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:46 2023
+7: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:46 2023
+9: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:46 2023
+10: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:46 2023
+12: "CONNECT rr1---sn-5uaeznls.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+8: "CONNECT tpc.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+12: WARNING method name is not GET/POST/CONNECT
+13: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+6: ERROR recv error 1
+14: "CONNECT i4.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+15: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+16: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+16: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+16: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+16: NOTE  Content Length
+16: Responding "HTTP/1.1 200 OK"
+17: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:47 2023
+17: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
+17: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+17: NOTE  Content Length
+17: Responding "HTTP/1.1 200 OK"
+18: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:53 2023
+19: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:53 2023
+20: "CONNECT www.googleadservices.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:57 2023
+21: "CONNECT www.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:57 2023
+22: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:58 2023
+23: "CONNECT m.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:58 2023
+27: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:58 2023
+28: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:58 2023
+29: "CONNECT fls-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+30: "CONNECT unagi.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+26: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+24: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+25: "CONNECT m.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+32: "CONNECT aax-us-east-retail-direct.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+24: ERROR recv error 1
+26: ERROR recv error 1
+33: "CONNECT completion.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+32: WARNING method name is not GET/POST/CONNECT
+34: "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+36: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+37: "CONNECT p3epspumangb5dvijf52er7wdi.appsync-api.us-east-1.amazonaws.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+40: "CONNECT d23tl967axkois.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+38: "CONNECT metrics.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+34: Requesting "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from ocsp.r2m02.amazontrust.com
+34: Received "HTTP/1.1 200 OK" from ocsp.r2m02.amazontrust.com
+34: Responding "HTTP/1.1 200 OK"
+35: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+44: "CONNECT d2in0p32vp1pij.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+46: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+41: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+48: "CONNECT player.stats.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+47: "CONNECT 4b64d6fa612f.us-east-1.playback.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:52:59 2023
+49: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+51: "CONNECT usersync.samplicio.us:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+52: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+53: "CONNECT video-weaver.jfk04.hls.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+54: "CONNECT c1.adform.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+55: "CONNECT loadus.exelator.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+63: "CONNECT dpm.demdex.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+64: "CONNECT image6.pubmatic.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:00 2023
+63: WARNING method name is not GET/POST/CONNECT
+12: ERROR recv error 1
+65: "CONNECT rr1---sn-5uaeznls.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:01 2023
+66: "CONNECT dr3fr5q4g2ul9.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:02 2023
+67: "CONNECT d2ef20sk9hi1u3.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:02 2023
+53: ERROR recv error 2
+32: ERROR recv error 1
+63: ERROR recv error 1
+68: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:16 2023
+68: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+68: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+68: Responding "HTTP/1.1 200 OK"
+68: NOTE  Chunked
+69: "GET http://www.httpwatch.com/favicon.ico HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:20 2023
+69: Requesting "GET http://www.httpwatch.com/favicon.ico HTTP/1.1" from www.httpwatch.com
+69: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+69: NOTE  Content Length
+69: Responding "HTTP/1.1 200 OK"
+70: "GET http://www.testingmcafeesites.com/testcat_bu.html HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 23:53:25 2023
+70: Requesting "GET http://www.testingmcafeesites.com/testcat_bu.html HTTP/1.1" from www.testingmcafeesites.com
+70: Received "HTTP/1.1 200 OK" from www.testingmcafeesites.com
+70: NOTE  Content Length
+70: Responding "HTTP/1.1 200 OK"

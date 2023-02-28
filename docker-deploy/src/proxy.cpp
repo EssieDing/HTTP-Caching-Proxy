@@ -1,7 +1,5 @@
 #include "proxy.h"
 #include "helper.h"
-#include <unordered_map>
-#include <map>
 #include <vector>
 #include <sys/socket.h>
 #include <string.h>
@@ -106,30 +104,32 @@ void ProxyServer::processCONNECT(Client * client){
     char buf[URL_LIMIT] = {0};
     while (true) {
         int byte_count, byte_count_send;
-        //tv.tv_sec = 2; 
-        //tv.tv_usec = 0; 
+
         // clear sets and add our descriptors
         FD_ZERO(&readfds);
         FD_SET(client_socket, &readfds); // socket one
         FD_SET(server_socket, &readfds); // socket two
         rv = select(maxfd + 1, &readfds, NULL, NULL, NULL);
         if (rv == -1) {
-            perror("select"); // error occurred in select()
+            // perror("select"); // error occurred in select()
+            logFile(to_string(client->id)+": ERROR "+"select");
         } else if (rv == 0) {
-            printf("Timeout occurred! No data after 10.5 seconds.\n");
+            cout<<"Timeout occurred! No data after 10.5 seconds.\n";
         } else {
             // one or both of the descriptors have data
             if (FD_ISSET(client_socket, &readfds)) {
                 byte_count = recv(client_socket, buf, sizeof(buf), MSG_NOSIGNAL);
                 // cout << "connect recv1 " << byte_count << endl;
                 if(byte_count <= 0){
-                    perror("recv error");
+                    // perror("recv error");
+                    logFile(to_string(client->id)+": ERROR "+"recv error 1");
                     return;
                 }
                 byte_count_send = send(server_socket, buf, byte_count, MSG_NOSIGNAL);
                 // cout << "connect send1 " << byte_count << endl;
                 if (byte_count_send <= 0){
-                    perror("send error");
+                    // perror("send error");
+                    logFile(to_string(client->id)+": ERROR "+"send error 1");
                     return;
                 }
 
@@ -138,13 +138,15 @@ void ProxyServer::processCONNECT(Client * client){
                 byte_count = recv(server_socket, buf, sizeof(buf), MSG_NOSIGNAL);
                 // cout << "connect recv2 " << byte_count << endl;
                 if(byte_count <= 0){
-                    perror("recv error");
+                    // perror("recv error");
+                    logFile(to_string(client->id)+": ERROR "+"recv error 2");
                     return;
                 }
                 byte_count_send = send(client_socket, buf, byte_count, MSG_NOSIGNAL);
                 // cout << "connect sned2 " << byte_count << endl;
                 if (byte_count_send <= 0){
-                    perror("send error");
+                    // perror("send error");
+                    logFile(to_string(client->id)+": ERROR "+"send error 2");
                     return;
                 }
             }
@@ -171,12 +173,11 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
     // recieve response: server->proxy
     char server_rsp[65536];
     int server_rsp_bytes = recv(client.server_fd,server_rsp, sizeof(server_rsp),MSG_NOSIGNAL);    
-    if(server_rsp_bytes==-1){
+    if(server_rsp_bytes<=0){
         // cout<<"recv unsuccessfully.\n";
         logFile(to_string(client.id)+": ERROR "+"GET:recv response from server to proxy unsuccessfully");
         return;
     }
-    if(server_rsp_bytes==0){}//////
 
     // prase the response, determine chunked or not
     string temp_response(server_rsp);
