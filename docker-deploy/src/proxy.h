@@ -34,7 +34,7 @@ class ProxyServer {
       cache = new Cache(10);
     };
 
-   void run();
+    void run();
     void * processRequest(void * input_client);
 
     // Connect method
