@@ -1,121 +1,96 @@
-2: "CONNECT spocs.getpocket.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:41 2023
-3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:44 2023
-4: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:49 2023
-4: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
-4: Received "HTTP/1.1 200 OK" from www.httpwatch.com
-5: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:49 2023
-7: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:49 2023
-8: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:58:57 2023
-9: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:05 2023
-10: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-13: "CONNECT www.googletagmanager.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-15: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-19: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-17: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-21: "CONNECT www.google-analytics.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-22: "CONNECT stats.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:06 2023
-23: "CONNECT static.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:07 2023
-25: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:14 2023
-28: "CONNECT accounts.google.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:15 2023
-30: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:16 2023
-31: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:16 2023
-32: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:16 2023
-36: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:38 2023
-37: "CONNECT www.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:44 2023
-38: "CONNECT m.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:44 2023
-39: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:44 2023
-50: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:52 2023
-52: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:52 2023
-54: "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:52 2023
-55: "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:52 2023
-56: "CONNECT rr2---sn-5uaeznez.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:52 2023
-57: "CONNECT rr2---sn-5uaeznez.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-58: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-58: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
-58: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-53: "CONNECT tpc.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-59: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-61: "CONNECT ad.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-63: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-62: "CONNECT ade.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 01:59:53 2023
-63: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
-63: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-64: "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:03 2023
-65: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:05 2023
-66: "CONNECT rr3---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:05 2023
-67: "CONNECT rr5---sn-5ualdnse.googlevideo.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:05 2023
-68: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:08 2023
-69: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:08 2023
-71: "CONNECT assoc-na.associates-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:15 2023
-72: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:15 2023
-73: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:15 2023
-74: "CONNECT aax-us-east-retail-direct.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:16 2023
-75: "CONNECT aax-us-east-retail-direct.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:16 2023
-76: "CONNECT completion.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:16 2023
-77: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:16 2023
-78: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-79: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-80: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-81: "CONNECT metrics.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-85: "CONNECT player.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-86: "CONNECT metrics.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-84: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-87: "CONNECT d23tl967axkois.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:17 2023
-88: "CONNECT player.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:18 2023
-90: "CONNECT d2in0p32vp1pij.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:19 2023
-91: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:19 2023
-92: "CONNECT player.stats.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-93: "CONNECT 4b64d6fa612f.us-east-1.playback.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-95: "CONNECT video-weaver.atl01.hls.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-96: "POST http://ocsp.r2m01.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-97: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-96: Requesting "POST http://ocsp.r2m01.amazontrust.com/ HTTP/1.1" from ocsp.r2m01.amazontrust.com
-97: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-98: "CONNECT fls-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:20 2023
-99: "CONNECT video-weaver.atl01.hls.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:21 2023
-100: "CONNECT ade.googlesyndication.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:25 2023
-101: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:25 2023
-101: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
-101: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
-102: "CONNECT unagi.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:47 2023
-103: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-105: "CONNECT www.imdb.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-104: "CONNECT t.myvisualiq.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-107: "CONNECT ads.samba.tv:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-108: "CONNECT lciapi.ninthdecimal.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-109: "CONNECT pi.ispot.tv:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:50 2023
-110: "POST http://ocsp.godaddy.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-110: Requesting "POST http://ocsp.godaddy.com/ HTTP/1.1" from ocsp.godaddy.com
-111: "CONNECT ib.adnxs.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-114: "CONNECT dsum-sec.casalemedia.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-115: "CONNECT amazon.partners.tremorhub.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-120: "CONNECT beacon.krxd.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-121: "CONNECT match.360yield.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-122: "CONNECT pixel.rubiconproject.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-123: "CONNECT ads.stickyadstv.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-124: "CONNECT dpm.demdex.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-125: "CONNECT odr.mookie1.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:51 2023
-126: "CONNECT c1.adform.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-156: "CONNECT eb2.3lift.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-129: "CONNECT image2.pubmatic.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-128: "CONNECT www.facebook.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-155: "CONNECT ads.stickyadstv.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-127: "CONNECT token.rubiconproject.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-162: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-163: "POST http://ocsp.r2m01.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-163: Requesting "POST http://ocsp.r2m01.amazontrust.com/ HTTP/1.1" from ocsp.r2m01.amazontrust.com
-162: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-163: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-162: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-163: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-162: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-165: "CONNECT p3epspumangb5dvijf52er7wdi.appsync-api.us-east-1.amazonaws.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-162: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:52 2023
-162: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-166: "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:53 2023
-167: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:53 2023
-166: Requesting "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from ocsp.r2m02.amazontrust.com
-167: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-169: "CONNECT d2ef20sk9hi1u3.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:53 2023
-170: "CONNECT dr3fr5q4g2ul9.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:53 2023
-168: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Wed Mar  1 02:00:53 2023
+1: "POST http://httpbin.org/post HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:14 2023
+1: Requesting "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+1: Received "HTTP/1.1 200 OK" from httpbin.org
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:21 2023
+3: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:21 2023
+4: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:21 2023
+5: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:21 2023
+9: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:22 2023
+11: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:22 2023
+12: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:23 2023
+13: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:23 2023
+15: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:23 2023
+16: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:25 2023
+21: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+22: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+20: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+24: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+25: "CONNECT www.artsci.utoronto.ca:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+28: "CONNECT www.googletagmanager.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+29: "CONNECT www.google-analytics.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+30: "CONNECT stats.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:27 2023
+32: "CONNECT www.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:29 2023
+34: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:29 2023
+33: "CONNECT m.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:29 2023
+38: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+39: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+40: "CONNECT assoc-na.associates-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+41: "CONNECT fls-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+42: "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+35: "CONNECT m.media-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+36: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+37: "CONNECT images-na.ssl-images-amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+42: Requesting "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from ocsp.r2m02.amazontrust.com
+43: "CONNECT aax-us-east-retail-direct.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+44: "CONNECT aax-us-east-retail-direct.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+42: Received "HTTP/1.1 200 OK" from ocsp.r2m02.amazontrust.com
+45: "CONNECT completion.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+49: "CONNECT p3epspumangb5dvijf52er7wdi.appsync-api.us-east-1.amazonaws.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+47: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+51: "CONNECT d23tl967axkois.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+52: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+53: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+55: "CONNECT aax-us-iad.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+57: "CONNECT d2in0p32vp1pij.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+59: "CONNECT player.stats.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+60: "CONNECT 4b64d6fa612f.us-east-1.playback.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+61: "CONNECT www.imdb.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+63: "CONNECT ads.samba.tv:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:30 2023
+54: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+64: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+65: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+66: "CONNECT video-weaver.iad03.hls.live-video.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+67: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+67: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+67: Received "HTTP/1.1 200 OK" from ocsp.digicert.com
+68: "CONNECT unagi-na.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+69: "CONNECT c1.adform.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+70: "CONNECT tags.bluekai.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+72: "CONNECT dpm.demdex.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+73: "CONNECT sync.search.spotxchange.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+74: "CONNECT bs.serving-sys.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+78: "CONNECT x.bidswitch.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+79: "CONNECT cms.analytics.yahoo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+80: "CONNECT cm.g.doubleclick.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+81: "CONNECT sb.scorecardresearch.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+82: "CONNECT us-u.openx.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+83: "CONNECT ssum-sec.casalemedia.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+84: "CONNECT uipglob.semasio.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+85: "CONNECT ib.adnxs.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+86: "CONNECT loadus.exelator.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+87: "CONNECT www.facebook.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+88: "CONNECT image6.pubmatic.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+89: "CONNECT sync.taboola.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+75: "CONNECT match.360yield.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+90: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+91: "POST http://status.geotrust.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+90: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+92: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+90: Received "HTTP/1.1 200 OK" from ocsp.digicert.com
+92: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+91: Requesting "POST http://status.geotrust.com/ HTTP/1.1" from status.geotrust.com
+93: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+92: Received "HTTP/1.1 200 OK" from ocsp.digicert.com
+91: Received "HTTP/1.1 200 OK" from status.geotrust.com
+95: "CONNECT ups.analytics.yahoo.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+94: "CONNECT s.amazon-adsystem.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:31 2023
+97: "CONNECT d2ef20sk9hi1u3.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:32 2023
+96: "CONNECT dr3fr5q4g2ul9.cloudfront.net:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:32 2023
+98: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:33 2023
+98: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+98: Received "HTTP/1.1 200 OK" from ocsp.digicert.com
+99: "CONNECT lm.serving-sys.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:33 2023
+100: "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:34 2023
+100: Requesting "POST http://ocsp.r2m02.amazontrust.com/ HTTP/1.1" from ocsp.r2m02.amazontrust.com
+100: Received "HTTP/1.1 200 OK" from ocsp.r2m02.amazontrust.com
+101: "CONNECT unagi.amazon.com:443 HTTP/1.1" from 10.197.247.64 @ Tue Feb 28 22:05:35 2023

@@ -55,8 +55,7 @@ void * ProxyServer::processRequest(void * input_client){
 
     // log file
     // ID: "REQUEST" from IPFROM @ TIME
-    time_t temp_time=getUTCurrentime();
-    string time=timeString(temp_time);
+    string time=getCurrentTimeStr();
     logFile(to_string(client->id)+": "+"\""+request.request_line+"\""+ " from "+client->ip+" @ "+time);
     
     // step1: open client socket with web server
@@ -146,14 +145,7 @@ void ProxyServer::processCONNECT(Client * client){
 };
 
 
-
-    
-
 void ProxyServer::processGET(ProxyServer::Client & client, const char * message, int message_bytes, Request & request){
-
-    //ssize_t send(int sockfd, const char *buf, size_t len, int flags);
-    //ssize_t recv(int socket, void *buffer, size_t length, int flags);
-
     // send request: proxy->server
 
     // log file
@@ -162,7 +154,8 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
 
     ssize_t num=send(client.server_fd,message,message_bytes, MSG_NOSIGNAL);
     if(num==-1){
-        cout<<"send unsuccessfully.\n";//////
+        // cout<<"send unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"GET:send request from proxy to server unsuccessfully");
         return;
     }
 
@@ -170,7 +163,8 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
     char server_rsp[65536];
     int server_rsp_bytes = recv(client.server_fd,server_rsp, sizeof(server_rsp),MSG_NOSIGNAL);    
     if(server_rsp_bytes==-1){
-        cout<<"recv unsuccessfully.\n";//////
+        // cout<<"recv unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"GET:recv response from server to proxy unsuccessfully");
         return;
     }
     if(server_rsp_bytes==0){}//////
@@ -188,7 +182,7 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
 
     if(chunked){
         // for chunked
-        cout<<"enter chunked:\n";
+        cout<<"enter chunked:\n";  
         // // test:
         // const char * test1=strstr(server_rsp,"chunked");
         // if(test1!=nullptr){cout<<"right1\n";}else{cout<<"wrong1\n";}
@@ -224,7 +218,8 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     // send the first response recieved from server to client: proxy->client
     int num = send(client.socket_fd,server_rsp,server_rsp_bytes, MSG_NOSIGNAL);
     if (num == -1) {
-        cout<<"send the response recieved from server to client unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"Chunked:send the response recieved from server to client unsuccessfully");
+        // cout<<"send the response recieved from server to client unsuccessfully.\n";
         return;
     }
     char message[65536];
@@ -237,13 +232,15 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
             return;
         }
         if(recv_length==-1){
-            cout<<"chunked: recv unsuccessfully.\n";
+            // cout<<"chunked: recv unsuccessfully.\n";
+            logFile(to_string(client.id)+": ERROR "+"Chunked:recv unsuccessfully");
             return;
         }
         // send to client
         int send_length=send(client.socket_fd,message,recv_length, MSG_NOSIGNAL); 
         if(send_length==-1){
-            cout<<"chunked: send unsuccessfully.\n";
+            // cout<<"chunked: send unsuccessfully.\n";
+            logFile(to_string(client.id)+": ERROR "+"Chunked:send unsuccessfully");
             return;
         }
     }
@@ -256,9 +253,7 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
     // < Content-Length: don't have the full message yet, wait in a while loop 
     // until you have received >= Content-Length
 
-    cout<<"enter getNonChunked:\n";
     int content_length=getContentLength(server_rsp,server_rsp_bytes);
-    cout<<"get remaining content length: "<<content_length<<endl;
 
     // get full message according to the remaining content_length 
     int current_recieved_length = 0;
@@ -267,7 +262,8 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         int rsp_len = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), MSG_NOSIGNAL);
 
         if(rsp_len==-1){
-            cout<<"GET-Content Length: recv unsuccessfully.\n";
+            // cout<<"GET-Content Length: recv unsuccessfully.\n";
+            logFile(to_string(client.id)+": ERROR "+"Content Length:recv unsuccessfully");
             return;
         }
         if (rsp_len == 0) {
@@ -288,12 +284,13 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
         message.push_back(full_message[i]);
     }
     const char * msg_sent = message.data();
-    rsp.all_content = full_message;
+    rsp.all_content = full_message;//////////////////
 
     // send to client
     int rsp_to_client;
     if ((rsp_to_client = send(client.socket_fd, msg_sent, full_message.size(),MSG_NOSIGNAL))==-1){
-        cout<<"Content Length: send unsuccessfully.\n";
+        // cout<<"Content Length: send unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"Content Length:send unsuccessfully");
         return;
     }
     // if not get: ??
@@ -302,13 +299,13 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
 
 int ProxyServer::getContentLength(char * server_rsp,int server_rsp_bytes){
     // get the pointer pointing to start of the "Content-Length"
-    cout<<"enter get content length:\n";
+    // cout<<"enter get content length:\n";
     char * found_length=strstr(server_rsp,"Content-Length: ");
     if(found_length==nullptr){return 0;}
     size_t size=strlen("Content-Length: ");
     found_length=found_length+size;
 
-    cout<<"run here 1\n";
+    // cout<<"run here 1\n";
     int content_length=0;
     while(isdigit(*found_length)){
         // cout<<"run here 2\n";
@@ -317,12 +314,12 @@ int ProxyServer::getContentLength(char * server_rsp,int server_rsp_bytes){
         found_length++;
     }
     // remaining_content_length = content_length - (recv_size - header_size)
-    cout<<"run here 3\n";
+    // cout<<"run here 3\n";
     std::string rsp(server_rsp, server_rsp_bytes);
     size_t header_end=rsp.find_first_of("\r\n\r\n");
     content_length = content_length - (server_rsp_bytes - header_end - strlen("\r\n\r\n"));
 
-    cout<<" get content length finished.\n";
+    // cout<<" get content length finished.\n";
     return content_length;
 }
 
@@ -337,13 +334,15 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
     cout<<"client->proxy\n";
     int current_length=0;
     string full_request(message, message_bytes);
+    Request req(full_request);
 
     while (current_length < content_length) {
     char new_client_req[65536];
     int req_len = recv(client.socket_fd, new_client_req, sizeof(new_client_req), MSG_NOSIGNAL);
 
     if(req_len==-1){
-        cout<<"POST-Content Length: recv unsuccessfully.\n";
+        // cout<<"POST-Content Length: recv unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"POST:recv request from client to proxy unsuccessfully");
         return;
     }
     if (req_len == 0) {
@@ -358,21 +357,20 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
 
     // send request: proxy->server
     cout<<"proxy->server\n";
-
-    // log file
-    // ID: Requesting "REQUEST" from SERVER
-    Request req(full_request);
-    logFile(to_string(client.id)+": "+"Requesting "+"\""+req.request_line+"\" "+"from "+req.host_name);
-
     vector<char> request;
     for (size_t i = 0; i < full_request.length(); i++) {
         request.push_back(full_request[i]);
     }
     const char * req_sent = request.data();
 
+    // log file
+    // ID: Requesting "REQUEST" from SERVER
+    logFile(to_string(client.id)+": "+"Requesting "+"\""+req.request_line+"\" "+"from "+req.host_name);
+
     int req_to_server;
     if ((req_to_server = send(client.server_fd, req_sent, full_request.size(),MSG_NOSIGNAL))==-1){
-        cout<<"POST: send to server unsuccessfully.\n";
+        // cout<<"POST: send to server unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"POST:send request from proxy to server unsuccessfully");
         return;
     }
 
@@ -381,14 +379,22 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
     char server_rsp[65536];
     int server_rsp_len = recv(client.server_fd, server_rsp, sizeof(server_rsp), MSG_NOSIGNAL);
     if(server_rsp_len==-1){
-        cout<<"POST: recv from server unsuccessfully.\n";
+        // cout<<"POST: recv from server unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"POST:recv response from server to proxy unsuccessfully");
         return;
     }
+    // log file
+    // ID: Received "RESPONSE" from SERVER
+    string rsp(server_rsp,server_rsp_len);
+    Response rsp_lop(rsp);
+    logFile(to_string(client.id)+": "+"Received "+"\""+rsp_lop.response_line+"\" "+"from "+req.host_name);
+
     // send response: proxy->client
     cout<<"proxy->client\n";
     int rsp_to_client;
     if ((rsp_to_client = send(client.socket_fd, server_rsp,server_rsp_len,MSG_NOSIGNAL))==-1){
-        cout<<"POST: send to client unsuccessfully.\n";
+        // cout<<"POST: send to client unsuccessfully.\n";
+        logFile(to_string(client.id)+": ERROR "+"POST:send response from proxy to client unsuccessfully");
         return;
     }
 
@@ -472,14 +478,11 @@ bool ProxyServer::validCheck(Client & client, Response & response, string reques
         return false;
     }
 };
-
 bool expireCheck_Expires (string timeStr){
-  string current = timeString(getUTCurrentime());
+  string current = getCurrentTimeStr();
   struct tm t1 = {0};
   getTimeStruct(t1, current);
-
-//   struct tm t2 = {0};
-//   getTimeStruct(t2, timeStr);
+  
   struct tm * t2 = getUTCtime(timeStr);
 
   int seconds = difftime(mktime(t2), mktime(&t1));//t1-t2
@@ -487,13 +490,12 @@ bool expireCheck_Expires (string timeStr){
 }
 
 bool expireCheck_maxAge(int max_age,string timeStr){
-  string current = timeString(getUTCurrentime());
+  string current = getCurrentTimeStr();
  
   struct tm t1 = {0};
   getTimeStruct(t1, current);
 
   struct tm * t2 = getUTCtime(timeStr);
-  //getTimeStruct(t2, timeStr);
 
   int seconds = difftime(mktime(&t1), mktime(t2));//t1-t2
   return seconds > max_age;

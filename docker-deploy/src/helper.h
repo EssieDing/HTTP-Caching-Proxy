@@ -31,8 +31,8 @@ int setUpServer(const char * myPort){
   } //if
 
   socket_fd = socket(host_info_list->ai_family, 
-		     host_info_list->ai_socktype, 
-		     host_info_list->ai_protocol);
+       host_info_list->ai_socktype, 
+       host_info_list->ai_protocol);
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname<< "," << port << ")" << endl;
@@ -81,8 +81,8 @@ int setUpClient(const char *hostname, const char *myPort){
   } //if
 
   socket_fd = socket(host_info_list->ai_family, 
-		     host_info_list->ai_socktype, 
-		     host_info_list->ai_protocol);
+       host_info_list->ai_socktype, 
+       host_info_list->ai_protocol);
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
@@ -135,6 +135,7 @@ unordered_map<string,int> monthMap = {
     {"Dec", 12},
 };
 
+// convert string to tm struct
 void getTimeStruct (struct tm & time, string timeStr){
     time.tm_year = atoi((timeStr.substr(12,4)).c_str())-1900;
     time.tm_mon = monthMap[timeStr.substr(8,3)]-1;
@@ -155,33 +156,9 @@ string getCurrentTimeStr() {
   return timeString(currentTime);
 }
 
-time_t getUTCurrentime(){
-  time_t rawtime;
-  struct tm * ptm;
-  time ( &rawtime );
-  ptm = gmtime (&rawtime);
-  return mktime(ptm);
-}
-
-// time_t getUTCtime2(string rawTimeStr){
-//   struct tm ptm= {0};
-//   getTimeStruct(ptm, rawTimeStr);
-//   time_t raw_time = mktime(&ptm);
-//   return mktime(gmtime(&raw_time));
-// }
-
 tm * getUTCtime(string rawTimeStr){
   struct tm ptm= {0};
-  getTimeStruct(ptm, rawTimeStr);
-  time_t raw_time = mktime(&ptm);
-  return gmtime(&raw_time);
-}
-
-//get string expiretime
-string get_expire_time(int max_age, string res_date){
-  struct tm t={0};
-  getTimeStruct(t, res_date);
-  time_t ans = mktime(&t)+max_age;
-  string myans = ctime(&ans);/* 转换成 时间格式（UTC），给打印ID： cache expire at XXX 使用*/
-  return myans;
+  getTimeStruct(ptm, rawTimeStr); // convert string to tm struct
+  time_t raw_time = mktime(&ptm); // tm to time_t
+  return gmtime(&raw_time); // time_t to UTC tm
 }

@@ -36,6 +36,7 @@ class Response {
             last_modified(""),date("") {}
         
         Response(string content): all_content(content){
+            
             parseResponse();
         }
         void parseResponse();  // get all headers or directive
