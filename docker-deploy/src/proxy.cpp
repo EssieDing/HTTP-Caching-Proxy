@@ -49,9 +49,13 @@ void * ProxyServer::processRequest(void * input_client){
     if (byte_count <= 0) {
         return NULL;
     }
+
     Request request ((string) buf);
 
-    if(request.validDetermine()==false){return NULL;}
+    if(request.validDetermine()==false){
+        logFile(to_string(client->id)+": "+"WARNING method name is not GET/POST/CONNECT");
+        return NULL;
+    }
 
     // log file
     // ID: "REQUEST" from IPFROM @ TIME
@@ -59,10 +63,15 @@ void * ProxyServer::processRequest(void * input_client){
     logFile(to_string(client->id)+": "+"\""+request.request_line+"\""+ " from "+client->ip+" @ "+time);
     
     // step1: open client socket with web server
-    int server_fd = setUpClient(request.host_name.c_str(), request.port.c_str());
-    cout << "connect successfully with server " << server_fd << endl;
-    client->server_fd = server_fd;
-
+    try{
+        int server_fd = setUpClient(request.host_name.c_str(), request.port.c_str());
+        cout << "connect successfully with server " << server_fd << endl;
+        client->server_fd = server_fd;
+    }
+    catch (exception & e) {
+        logFile(to_string(client->id)+": "+"WARNING "+ e.what());
+        return NULL;
+    }
 
     if(request.method_name == "CONNECT") {
         processCONNECT(client);
@@ -77,7 +86,7 @@ void * ProxyServer::processRequest(void * input_client){
         processPOST(*client,buf,byte_count);
     }
 
-    return NULL;////////////////////
+    return NULL;
 }
 
 
@@ -216,13 +225,22 @@ bool ProxyServer::determineChunked(char * rsp){// string rsp
 
 void ProxyServer::getChunked(Client & client, const char * server_rsp, int server_rsp_bytes){
     // send the first response recieved from server to client: proxy->client
+    string resp_temp(server_rsp, server_rsp_bytes);
+    Response resp(resp_temp);
+
+    // send to client
+    // log file
+    logFile(to_string(client.id)+": Responding \""+resp.response_line+"\"");
+
     int num = send(client.socket_fd,server_rsp,server_rsp_bytes, MSG_NOSIGNAL);
     if (num == -1) {
         logFile(to_string(client.id)+": ERROR "+"Chunked:send the response recieved from server to client unsuccessfully");
         // cout<<"send the response recieved from server to client unsuccessfully.\n";
         return;
     }
+
     char message[65536];
+    logFile(to_string(client.id)+": NOTE "+" Chunked");
     while (1) {
         // cout<<"loop once\n";
         // recv from server
@@ -236,7 +254,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
             logFile(to_string(client.id)+": ERROR "+"Chunked:recv unsuccessfully");
             return;
         }
-        // send to client
+
         int send_length=send(client.socket_fd,message,recv_length, MSG_NOSIGNAL); 
         if(send_length==-1){
             // cout<<"chunked: send unsuccessfully.\n";
@@ -248,6 +266,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
 
 void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Request & request, Response & rsp){
     string full_message(server_rsp, server_rsp_bytes);
+    Response resp(full_message);
     // get Content-Length: 
     // help to determine whether we have received the full message. 
     // < Content-Length: don't have the full message yet, wait in a while loop 
@@ -257,6 +276,7 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
 
     // get full message according to the remaining content_length 
     int current_recieved_length = 0;
+    logFile(to_string(client.id)+": NOTE "+" Content Length");
     while (current_recieved_length < content_length) {
         char new_server_rsp[65536];
         int rsp_len = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), MSG_NOSIGNAL);
@@ -287,13 +307,16 @@ void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp
     rsp.all_content = full_message;//////////////////
 
     // send to client
+    // log file
+    // ID: Responding "RESPONSE"
+    logFile(to_string(client.id)+": Responding \""+resp.response_line+"\"");
+
     int rsp_to_client;
     if ((rsp_to_client = send(client.socket_fd, msg_sent, full_message.size(),MSG_NOSIGNAL))==-1){
         // cout<<"Content Length: send unsuccessfully.\n";
         logFile(to_string(client.id)+": ERROR "+"Content Length:send unsuccessfully");
         return;
     }
-    // if not get: ??
 }
 
 
@@ -391,13 +414,14 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
 
     // send response: proxy->client
     cout<<"proxy->client\n";
+    // log file
+    logFile(to_string(client.id)+": Responding \""+rsp_lop.response_line+"\"");
     int rsp_to_client;
     if ((rsp_to_client = send(client.socket_fd, server_rsp,server_rsp_len,MSG_NOSIGNAL))==-1){
         // cout<<"POST: send to client unsuccessfully.\n";
         logFile(to_string(client.id)+": ERROR "+"POST:send response from proxy to client unsuccessfully");
         return;
     }
-
     cout<<"POST test Successfully\n";
 
 }

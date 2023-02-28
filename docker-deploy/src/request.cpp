@@ -11,9 +11,9 @@ void Request::parseRequest(){
     method_name=all_content.substr(0,method_found);
     
     if (method_name != "GET" && method_name != "POST" && method_name != "CONNECT") {
-        cout<<"method name not exist.";///////
+        cout<<"method name not exist.";
         method_name=" ";
-        return;////////
+        return;
     }
 
     // get request line
@@ -47,8 +47,8 @@ void Request::parseRequest(){
     }
     }
     catch (exception & e) {
-        cout<<"failed to parse request.\n";///////
-        return;////////
+        cout<<"failed to parse request.\n";
+        return;
   }
 }
 

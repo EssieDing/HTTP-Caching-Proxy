@@ -5,7 +5,7 @@ using namespace std;
 
 void Response::parseResponse(){
     try{
-        
+
         // get response_line
         size_t line_found=all_content.find_first_of("\r\n");
         response_line=all_content.substr(0,line_found);
@@ -64,8 +64,8 @@ void Response::parseResponse(){
         printAll();
 
     }catch (exception & e) {
-        cout<<"failed to parse response.\n";///////
-        return;////////
+        cout<<"failed to parse response.\n";
+        return;
     }
 }
 
