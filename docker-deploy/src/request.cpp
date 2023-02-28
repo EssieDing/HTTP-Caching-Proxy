@@ -5,7 +5,7 @@ using namespace std;
 
 void Request::parseRequest(){
     try{
-    cout<<"all_content: \n"<<all_content;    
+    // cout<<"all_content: \n"<<all_content;    
     // get method name
     size_t method_found=all_content.find_first_of(" ");
     method_name=all_content.substr(0,method_found);

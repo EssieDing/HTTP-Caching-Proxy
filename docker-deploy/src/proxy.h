@@ -38,14 +38,14 @@ class ProxyServer {
     void * processRequest(void * input_client);
 
     // Connect method
-    void * processCONNECT(Client * client);
+    void processCONNECT(Client * client);
 
     // GET method
-    void processGET(ProxyServer::Client & client, const char * message, int message_bytes);
+    void processGET(ProxyServer::Client & client, const char * message, int message_bytes, Request & request);
     void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
     bool determineChunked(char * rsp);//string
     
-    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes,  Request & request); // Content-Length: <length>
+    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes,  Request & request, Response & rsp); // Content-Length: <length>
     int getContentLength(char * server_rsp, int server_rsp_bytes);
 
 
@@ -53,8 +53,11 @@ class ProxyServer {
     void processPOST(ProxyServer::Client & client, char * message, int message_bytes);
 
     // Cache control
-    void cacheGet(ProxyServer::Client & client, Request request, const char * message, int message_bytes);
+    void cacheGet(ProxyServer::Client & client, Request & request, const char * message, int message_bytes);
     bool validCheck(Client & client, Response & response, string request);
     bool expireCheck(Client & client, Response & response);
     void cacheCheck (Response & response, string request_line);
+
+    // Log file
+    void logFile(string content);
 };
