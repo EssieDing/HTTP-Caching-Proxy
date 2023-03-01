@@ -1,0 +1,7 @@
+(no-id): NOTE put GET http://httpbin.org/forms/post HTTP/1.1 into cache
+ 01:43:28 2023
+2: "GET http://httpbin.org/forms/post HTTP/1.1" from 198.86.29.10 @ Wed Mar  1 01:43:31 2023
+2: not in cache
+2: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+2: Received "HTTP/1.1 200 OK" from httpbin.org
+2: cached expires at Wed Mar  1 01:43:30 2023

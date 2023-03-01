@@ -1,3 +1,5 @@
+#ifndef HELPER_H
+#define HELPER_H
 #include <iostream>
 #include <cstring>
 #include <netdb.h>
@@ -5,11 +7,22 @@
 #include <arpa/inet.h>
 #include <vector>
 #include <unordered_map>
+#include <mutex>
+#include <fstream>
 
 using namespace std;
+static std::ofstream log_file("var/log/erss/proxy.log");
+static mutex log_mtx; 
+
+
+static void logFile(string content) {
+    log_mtx.lock();
+    log_file << content <<endl;
+    log_mtx.unlock();
+}
 
 // set up server (till listen)
-int setUpServer(const char * myPort){
+static int setUpServer(const char * myPort){
   int status;
   int socket_fd;
   struct addrinfo host_info;
@@ -62,7 +75,7 @@ int setUpServer(const char * myPort){
 }
 
 // set up client, till connect
-int setUpClient(const char *hostname, const char *myPort){
+static int setUpClient(const char *hostname, const char *myPort){
   int status;
   int socket_fd;
   struct addrinfo host_info;
@@ -103,7 +116,7 @@ int setUpClient(const char *hostname, const char *myPort){
   return socket_fd;
 }
 
-int acceptClients(int server_fd, string & ip){
+static int acceptClients(int server_fd, string & ip){
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connection_fd;
@@ -120,7 +133,7 @@ int acceptClients(int server_fd, string & ip){
   return client_connection_fd;
 }
 
-unordered_map<string,int> monthMap = {
+static unordered_map<string,int> monthMap = {
     {"Jan", 1},
     {"Feb", 2},
     {"Mar", 3},
@@ -135,7 +148,8 @@ unordered_map<string,int> monthMap = {
     {"Dec", 12},
 };
 
-void getTimeStruct (struct tm & time, string timeStr){
+// convert string to tm struct
+static void getTimeStruct (struct tm & time, string timeStr){
     time.tm_year = atoi((timeStr.substr(12,4)).c_str())-1900;
     time.tm_mon = monthMap[timeStr.substr(8,3)]-1;
     time.tm_mday = atoi((timeStr.substr(5,2)).c_str());
@@ -144,44 +158,28 @@ void getTimeStruct (struct tm & time, string timeStr){
     time.tm_sec = atoi((timeStr.substr(23,2)).c_str());
 }
 
-string timeString(time_t time) {
+static string timeString(time_t time) {
   string timeStr = string(asctime(gmtime(&time)));
   return timeStr.substr(0, timeStr.find("\n"));
 }
 
 // return current Time string
-string getCurrentTimeStr() {
+static string getCurrentTimeStr() {
   time_t currentTime = time(0);
   return timeString(currentTime);
 }
 
-time_t getUTCurrentime(){
-  time_t rawtime;
-  struct tm * ptm;
-  time ( &rawtime );
-  ptm = gmtime (&rawtime);
-  return mktime(ptm);
-}
-
-// time_t getUTCtime2(string rawTimeStr){
-//   struct tm ptm= {0};
-//   getTimeStruct(ptm, rawTimeStr);
-//   time_t raw_time = mktime(&ptm);
-//   return mktime(gmtime(&raw_time));
-// }
-
-tm * getUTCtime(string rawTimeStr){
+static tm * getUTCtime(string rawTimeStr){
   struct tm ptm= {0};
-  getTimeStruct(ptm, rawTimeStr);
-  time_t raw_time = mktime(&ptm);
-  return gmtime(&raw_time);
+  getTimeStruct(ptm, rawTimeStr); // convert string to tm struct
+  time_t raw_time = mktime(&ptm); // tm to time_t
+  return gmtime(&raw_time); // time_t to UTC tm
 }
 
-//get string expiretime
-string get_expire_time(int max_age, string res_date){
-  struct tm t={0};
-  getTimeStruct(t, res_date);
-  time_t ans = mktime(&t)+max_age;
-  string myans = ctime(&ans);/* 转换成 时间格式（UTC），给打印ID： cache expire at XXX 使用*/
-  return myans;
+static string getExpiredTimeStr (string rawTimeStr, int extra){
+  struct tm rawTime= {0};
+  getTimeStruct(rawTime, rawTimeStr);
+  time_t expiredTime = mktime(&rawTime) + extra;
+  return timeString(expiredTime);
 }
+#endif

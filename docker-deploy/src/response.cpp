@@ -1,6 +1,6 @@
-#include "response.h"
 #include <iostream>
 #include <string.h>
+#include "response.h"
 using namespace std;
 
 void Response::parseResponse(){
@@ -60,11 +60,8 @@ void Response::parseResponse(){
         // get date
         date=findHeader("Date: ");
 
-<<<<<<< HEAD
         printAll();
 
-=======
->>>>>>> 00276edb963eafdb88a084a5e9fec1043bbc9ddc
     }catch (exception & e) {
         cout<<"failed to parse response.\n";///////
         return;////////
@@ -80,6 +77,7 @@ int Response::calculateAge(){
     // get max-age:
     size_t ma_start_found=all_content.find("max-age=");
     if(ma_start_found==string::npos){
+        cout<<"\nstep1\n";
         return -1; // don't have max-age
     }
 
@@ -173,7 +171,6 @@ string Response::getStatusCode(){
     }
     return status;
 }
-<<<<<<< HEAD
 
 void Response::printAll(){
     cout<<"all_content "<<all_content<<endl;////vector?
@@ -191,5 +188,3 @@ void Response::printAll(){
     cout<<"last_modified "<<last_modified<<endl;
     cout<<"date "<<date<<endl;
 }
-=======
->>>>>>> 00276edb963eafdb88a084a5e9fec1043bbc9ddc

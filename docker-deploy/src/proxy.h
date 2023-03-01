@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <cstdlib>
-#include <fstream>
 #include <map>
 #include <string>
 #include <thread>
@@ -9,7 +8,6 @@
 #include <fstream>
 #include <stdio.h>
 #include <string.h>
-#include <mutex>
 #include "cache.h"
 
 using namespace std;
@@ -31,26 +29,35 @@ class ProxyServer {
 
     public:
     ProxyServer (const char * port_num): port_num(port_num){
-      cache = new Cache(100);
+      cache = new Cache(10);
     };
 
-   void run();
+    void run();
     void * processRequest(void * input_client);
 
     // Connect method
-    void * processCONNECT(Client * client);
+    void processCONNECT(Client * client);
 
     // GET method
-    void processGET(ProxyServer::Client & client, const char * message, int message_bytes);
+    void processGET(ProxyServer::Client & client, const char * message, int message_bytes, Request & request);
     void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
     bool determineChunked(char * rsp);//string
     
-    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes); // Content-Length: <length>
+    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes,  Request & request, Response & rsp); // Content-Length: <length>
     int getContentLength(char * server_rsp, int server_rsp_bytes);
 
 
     // POST method
     void processPOST(ProxyServer::Client & client, char * message, int message_bytes);
-};
 
+    // Cache control
+    bool validCheck(Client & client, Response & response, string request);
+    bool expireCheck(Client & client, Response & response);
+    void cacheCheck (Client & client, Response & response, string request_line);
+    void cacheGet(ProxyServer::Client & client, Request & request, const char * message, int message_bytes);
+    bool expireCheck_Expires (Client & client, string timeStr);
+    bool expireCheck_maxAge(Client & client, int max_age,string timeStr);
+
+    // Log file
+    //void logFile(string content);
 };
