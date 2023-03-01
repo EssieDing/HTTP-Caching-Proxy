@@ -1,5 +1,4 @@
 #include "proxy.h"
-#include "helper.h"
 #include <vector>
 #include <sys/socket.h>
 #include <string.h>
@@ -7,15 +6,6 @@
 
 using namespace std;
 #define URL_LIMIT 65536
-ofstream log_file("var/log/erss/proxy.log");
-mutex log_mtx;
-
-
-void ProxyServer::logFile(string content) {
-    log_mtx.lock();
-    log_file << content <<endl;
-    log_mtx.unlock();
-}
 
 void ProxyServer::run(){
 
@@ -34,7 +24,7 @@ void ProxyServer::run(){
         client_id++;
         client->id = client_id;
 
-        thread t(&ProxyServer::processRequest, this, std::ref(client));
+        thread t(&ProxyServer::processRequest, this, ref(client));
         t.detach();
     }
 }
@@ -207,13 +197,14 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
         //     }
         // for non-chunked (length)
         cout<<"enter content length:\n";
-        
-        getNoChunked(client,server_rsp,server_rsp_bytes,rsp);
+        getNoChunked(client,server_rsp,server_rsp_bytes, rsp);
 
         if (rsp.status_code == "200"){
-            cacheCheck(rsp, request.request_line);
+            if (request.request_line == "") {
+                logFile("(no-id): ERROR NULL");
+            }
+            cacheCheck(client, rsp, request.request_line);
         }
-        cout<<"Content length finished.\n"; 
     }
 }
 
@@ -427,7 +418,6 @@ void ProxyServer::processPOST(ProxyServer::Client & client, char * message, int 
 }
 
 
-
 void ProxyServer::cacheGet(ProxyServer::Client & client, Request & request, const char * message, int message_bytes){
     string request_line = request.request_line; 
     string requestStr (message, message_bytes);
@@ -435,13 +425,13 @@ void ProxyServer::cacheGet(ProxyServer::Client & client, Request & request, cons
     // check if the request startline is in the cache map
     if (match.all_content == ""){ // has not found in cache map, cache miss
     // req and response whole process
-        // printLog(": not in cache")
+        logFile(to_string(client.id)+": not in cache");
         processGET(client, message, message_bytes,request); // include send req to server and process response (check and cache)
         
     } else { // find in the cache map, cache hit, match is not empty
         // check no_cache
         if (match.no_cache){ // the response must be validated with the origin server before each reuse
-            // printLog(": in cache, requires validation")
+            logFile(to_string(client.id)+": in cache, requires validation");
             // revalidate with origin server
             if (validCheck(client, match, requestStr) == false) {
                 processGET(client, message, message_bytes, request);
@@ -449,19 +439,25 @@ void ProxyServer::cacheGet(ProxyServer::Client & client, Request & request, cons
                 const char * return_msg = match.all_content.c_str();
                 int return_msg_bytes = send(client.socket_fd, return_msg, sizeof(return_msg), 0);
                 if (return_msg_bytes < 0){
+                    logFile(to_string(client.id)+": ERROR " +"GET:send response from proxy to client unsuccessfully");
                     return;
                 }
+                logFile(to_string(client.id)+": Responding " + match.response_line);
             }
         } else {
             if (expireCheck(client, match) == true){ // is expired, must_revalidate and expires
                 cache->remove(request_line); // expired, remove cache from mycache
                 processGET(client, message, message_bytes, request);
             } else {
+                logFile(to_string(client.id)+": in cache, valid");
                 const char * return_msg = match.all_content.c_str();
                 int return_msg_bytes = send(client.socket_fd, return_msg, sizeof(return_msg), 0);
+                //logFile("test return msg: " + (string)return_msg);
                 if (return_msg_bytes < 0){
+                    logFile(to_string(client.id)+": ERROR " +"GET:send response from proxy to client unsuccessfully");
                     return;
                 }
+                logFile(to_string(client.id)+": Responding " + match.response_line);
             }
         }
     }   
@@ -472,37 +468,43 @@ bool ProxyServer::validCheck(Client & client, Response & response, string reques
         return false;
     }
     if (response.etag != "") {
+        logFile(to_string(client.id)+": NOTE " + "ETag: " + response.etag);
         string modified_etag = "If-None-Match: "+ response.etag +"\r\n";
         request.insert(request.length()-2, modified_etag);
     }
     if (response.last_modified != "") {
+        logFile(to_string(client.id)+": NOTE " + "Last_modified: " + response.last_modified);
         string modified_lastModified = "If-Modified-Since: "+ response.last_modified +"\r\n";
         request.insert(request.length()-2, modified_lastModified);
     }
-    const char * new_request = request.c_str();
-    int new_request_bytes = send(client.server_fd, new_request, request.length() + 1, 0);
-    if (new_request_bytes < 0) {
-        // printLog
+    const char * new_req = request.c_str();
+    int new_req_bytes = send(client.server_fd, new_req, request.length() + 1, 0);
+    if (new_req_bytes < 0) {
+        logFile(to_string(client.id)+": ERROR "+"GET:send new request from proxy to server unsuccessfully");
         return false;
     }
+    Request new_request (new_req);
+    logFile(to_string(client.id)+": "+"Requesting "+"\""+ new_request.request_line+"\" "+"from "+new_request.host_name);
 
     char new_server_rsp[65536];
     int new_server_rsp_bytes = recv(client.server_fd, new_server_rsp, sizeof(new_server_rsp), 0);
     if (new_server_rsp_bytes < 0) {
-        //printLog
+        logFile(to_string(client.id)+": ERROR "+"GET:recv new response from server to proxy unsuccessfully");
         return false;
     }
     std::string new_server_rsp_str(new_server_rsp, new_server_rsp_bytes);
     Response new_response (new_server_rsp_str);
+    logFile(to_string(client.id)+": "+"Received "+"\""+new_response.response_line+"\" "+"from "+ new_request.host_name);
+
     // check status code
     if (new_response.status_code == "304") {
-        // printLog("not modified")
+        logFile(to_string(client.id)+": NOTE not modified, no need to update");
         return true;
     } else {
         return false;
     }
 };
-bool expireCheck_Expires (string timeStr){
+bool ProxyServer::expireCheck_Expires (Client & client, string timeStr){
   string current = getCurrentTimeStr();
   struct tm t1 = {0};
   getTimeStruct(t1, current);
@@ -510,10 +512,14 @@ bool expireCheck_Expires (string timeStr){
   struct tm * t2 = getUTCtime(timeStr);
 
   int seconds = difftime(mktime(t2), mktime(&t1));//t1-t2
-  return seconds < 0;
+  if (seconds < 0) {
+    logFile(to_string(client.id)+": in cache, but expired at " + timeStr);
+    return true;
+  }
+  return false;
 }
 
-bool expireCheck_maxAge(int max_age,string timeStr){
+bool ProxyServer::expireCheck_maxAge(Client & client, int max_age,string timeStr){
   string current = getCurrentTimeStr();
  
   struct tm t1 = {0};
@@ -522,16 +528,22 @@ bool expireCheck_maxAge(int max_age,string timeStr){
   struct tm * t2 = getUTCtime(timeStr);
 
   int seconds = difftime(mktime(&t1), mktime(t2));//t1-t2
-  return seconds > max_age;
+  if (seconds > max_age) {
+    logFile(to_string(client.id)+": in cache, but expired at " + getExpiredTimeStr(timeStr, max_age));
+    return true;
+  }
+  return false;
 }
 
 bool ProxyServer::expireCheck(Client & client, Response & response){ // true: isExpired
-    if (response.max_age != -100){
-        if (expireCheck_maxAge(response.max_age, response.date)){
+    if (response.max_age != -100 || response.max_age != -1){
+        if (expireCheck_maxAge(client, response.max_age, response.date)){ 
+            logFile("date: "+response.date);
             return true;
         }
     } else if (response.expires != "") {
-        if (expireCheck_Expires(response.expires)){
+        if (expireCheck_Expires(client, response.expires)){
+            logFile("expires: " +response.expires);
             return true;
         }
     }
@@ -540,19 +552,18 @@ bool ProxyServer::expireCheck(Client & client, Response & response){ // true: is
 
 
 // response status code is 200 can be cached
-void ProxyServer::cacheCheck (Response & response, string request_line) { // chunked and unchunked both need?
+void ProxyServer::cacheCheck (Client & client, Response & response, string request_line) { // chunked and unchunked both need?
     if (response.no_store) { // should not be cached
-        // printlog ": not cacheable because NO STORE" << endl;
+        logFile(to_string(client.id)+": not cacheable because " + "response has no_store");
         return;
-    } else {
-        if (response.no_cache) { // should be cached
-        //printlog ": cached, but requires re-validation"
-        } else if (response.max_age != -100) {
-            //printLog
+    } else { // should be cached
+        if (response.max_age != -100) {
+            logFile(to_string(client.id)+": cached " + "expires at " + getExpiredTimeStr(response.date, response.max_age));
         } else if (response.expires != "") {
-            //printLog
+            logFile(to_string(client.id)+": cached " + "expires at " + response.expires);
+        } else if (response.no_cache) { 
+            logFile(to_string(client.id)+": cached " + "but requires re-validation");
         }
         cache->put(request_line, response);
     }
 };
-
