@@ -207,9 +207,8 @@ void ProxyServer::processGET(ProxyServer::Client & client, const char * message,
         //     }
         // for non-chunked (length)
         cout<<"enter content length:\n";
-        string request_str (server_rsp, server_rsp_bytes);
-        Request request(request_str);
-        getNoChunked(client,server_rsp,server_rsp_bytes, request, rsp);
+        
+        getNoChunked(client,server_rsp,server_rsp_bytes,rsp);
 
         if (rsp.status_code == "200"){
             cacheCheck(rsp, request.request_line);
@@ -265,7 +264,7 @@ void ProxyServer::getChunked(Client & client, const char * server_rsp, int serve
     }
 }
 
-void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Request & request, Response & rsp){
+void ProxyServer::getNoChunked(Client & client,char * server_rsp, int server_rsp_bytes, Response & rsp){
     string full_message(server_rsp, server_rsp_bytes);
     Response resp(full_message);
     // get Content-Length: 

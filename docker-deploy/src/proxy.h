@@ -45,7 +45,7 @@ class ProxyServer {
     void getChunked(Client & client, const char * server_rsp, int server_rsp_bytes); // Transfer-Encoding: chunked
     bool determineChunked(char * rsp);//string
     
-    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes,  Request & request, Response & rsp); // Content-Length: <length>
+    void getNoChunked(Client & client, char * server_rsp, int server_rsp_bytes, Response & rsp); // Content-Length: <length>
     int getContentLength(char * server_rsp, int server_rsp_bytes);
 
 
